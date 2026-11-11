@@ -48,8 +48,12 @@ afterAll(() => {
 })
 
 describe('slug registration — every registered story resolves through the loader', () => {
-  it('registers exactly the two shipped stories, in order', () => {
-    expect([...REGISTERED_STORIES]).toEqual(['berbagi-rambutan', 'qila-ezra-truk-hilang'])
+  it('registers exactly the three shipped stories, in order', () => {
+    expect([...REGISTERED_STORIES]).toEqual([
+      'berbagi-rambutan',
+      'qila-ezra-truk-hilang',
+      'assalamualaikum-satu-senyum-damai',
+    ])
   })
 
   for (const slug of REGISTERED_STORIES) {
