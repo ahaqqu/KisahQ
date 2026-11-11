@@ -26,7 +26,8 @@ const LocalizedText = z
   .strict()
 
 const Pose = z.enum(['idle', 'happy', 'wave', 'jump'])
-const Bg = z.enum(['orchard'])
+/** Keep in sync with BackgroundKey in src/art/backgrounds.ts. */
+const Bg = z.enum(['orchard', 'kamar-ezra', 'ruang-tamu'])
 const Sfx = z.enum(['pop', 'chime', 'shake', 'whoosh', 'pluck', 'sparkle'])
 
 const Actor = z
