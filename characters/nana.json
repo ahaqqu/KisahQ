@@ -1,0 +1,11 @@
+{
+  "id": "nana",
+  "name": "Nana si Burung Hantu",
+  "species": "Burung hantu",
+  "role": {
+    "id": "Burung hantu yang bijak dan hangat",
+    "en": "A wise and warm owl"
+  },
+  "traits": ["bijak", "hangat", "suka bercerita"],
+  "artNotes": "Soft brown round owl with cream belly feathers, big round golden eyes, dark-blue batik headscarf accent (mega mendung pattern)."
+}

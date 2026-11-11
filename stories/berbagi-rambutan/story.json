@@ -1,0 +1,243 @@
+{
+  "slug": "berbagi-rambutan",
+  "title": {
+    "id": "Berbagi Rambutan",
+    "en": "Sharing Rambutan"
+  },
+  "ageBand": "3-4",
+  "characters": ["toto", "lili", "nana", "momo"],
+  "scenes": [
+    {
+      "id": "pembuka",
+      "bg": "orchard",
+      "actors": [],
+      "narration": {
+        "id": "Bismillah… yuk mulai! Hari ini kita menjenguk pohon rambutan di kampung.",
+        "en": "Bismillah… let's begin! Today we visit the rambutan tree in the village."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "tree",
+          "praise": {
+            "id": "Nah, pohon rambutannya gemuk sekali!",
+            "en": "Look, what a big rambutan tree!"
+          }
+        }
+      ],
+      "sfx": "chime",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "teman-salam",
+      "bg": "orchard",
+      "actors": [
+        { "character": "toto", "pose": "wave" },
+        { "character": "lili", "pose": "happy" },
+        { "character": "nana", "pose": "idle" }
+      ],
+      "narration": {
+        "id": "Toto, Lili, dan Nana datang berkunjung. \"Assalamualaikum!\" sapa mereka riang.",
+        "en": "Toto, Lili, and Nana come to visit. \"Assalamualaikum!\" they greet cheerfully."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "toto",
+          "praise": {
+            "id": "Waalaikumsalam, Toto! Ayo bermain bersama.",
+            "en": "Waalaikumsalam, Toto! Let's play together."
+          }
+        }
+      ],
+      "sfx": "pluck",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "pohon-tinggi",
+      "bg": "orchard",
+      "actors": [
+        { "character": "toto", "pose": "jump" },
+        { "character": "lili", "pose": "idle" },
+        { "character": "nana", "pose": "idle" }
+      ],
+      "narration": {
+        "id": "Wah, pohonnya tinggi sekali! Buahnya merah dipaling atas.",
+        "en": "Wow, the tree is so tall! The red fruit is right at the top."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "tree",
+          "praise": {
+            "id": "Hampir sampai! Tangan Toto belum sampai buahnya.",
+            "en": "Almost! Toto's arms cannot reach the fruit yet."
+          }
+        }
+      ],
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "goyang-bersama",
+      "bg": "orchard",
+      "actors": [
+        { "character": "toto", "pose": "happy" },
+        { "character": "lili", "pose": "jump" },
+        { "character": "nana", "pose": "happy" }
+      ],
+      "narration": {
+        "id": "Nana punya ide: \"Ayo goyang pohonnya BERSAMA-SAMA!\"",
+        "en": "Nana has an idea: \"Let's shake the tree TOGETHER!\""
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "tree",
+          "praise": {
+            "id": "Goyang! Goyang! Buahnya berjatuhan!",
+            "en": "Shake! Shake! The fruit comes tumbling down!"
+          }
+        }
+      ],
+      "sfx": "shake",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "hitung-buah",
+      "bg": "orchard",
+      "actors": [
+        { "character": "toto", "pose": "idle" },
+        { "character": "lili", "pose": "happy" }
+      ],
+      "narration": {
+        "id": "Lima rambutan jatuh. Ayo hitung bersama satu sampai lima!",
+        "en": "Five rambutans fell. Let's count together from one to five!"
+      },
+      "interactions": [
+        {
+          "type": "count",
+          "target": "fruits",
+          "count": 5,
+          "praise": {
+            "id": "Lima rambutan! Pandai sekali menghitung!",
+            "en": "Five rambutans! What great counting!"
+          }
+        }
+      ],
+      "sfx": "pop",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "momo-datang",
+      "bg": "orchard",
+      "actors": [
+        { "character": "toto", "pose": "idle" },
+        { "character": "lili", "pose": "idle" },
+        { "character": "momo", "pose": "idle" }
+      ],
+      "narration": {
+        "id": "Tuk… tuk… Momo si Siput datang terlambat. Tangannya masih kosong.",
+        "en": "Tap… tap… Momo the snail arrives late. His hands are still empty."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "momo",
+          "praise": {
+            "id": "Ayo ikut, Momo! Semua punya bagian di sini.",
+            "en": "Come join us, Momo! Everyone gets a share here."
+          }
+        }
+      ],
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "cuci-tangan",
+      "bg": "orchard",
+      "actors": [
+        { "character": "lili", "pose": "happy" },
+        { "character": "momo", "pose": "happy" }
+      ],
+      "narration": {
+        "id": "Sebelum makan, cuci tangan dulu. \"Bismillah,\" kata mereka serempak.",
+        "en": "Before eating, wash your hands. \"Bismillah,\" they say together."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "water",
+          "praise": {
+            "id": "Tangan bersih, hati siap makan bersama!",
+            "en": "Clean hands, hearts ready to eat together!"
+          }
+        }
+      ],
+      "sfx": "chime",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "makan-bersama",
+      "bg": "orchard",
+      "actors": [
+        { "character": "toto", "pose": "happy" },
+        { "character": "lili", "pose": "happy" },
+        { "character": "nana", "pose": "happy" },
+        { "character": "momo", "pose": "happy" }
+      ],
+      "narration": {
+        "id": "Semuanya makan rambutan bersama. \"Alhamdulillah, buahnya manis!\"",
+        "en": "Everyone eats rambutan together. \"Alhamdulillah, the fruit is sweet!\""
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "basket",
+          "praise": {
+            "id": "Nyam nyam nyam! Manisnya terasa hati ikut senang.",
+            "en": "Yum yum yum! The sweetness makes hearts happy too."
+          }
+        }
+      ],
+      "sfx": "chime",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "penutup",
+      "bg": "orchard",
+      "actors": [
+        { "character": "momo", "pose": "wave" },
+        { "character": "toto", "pose": "wave" }
+      ],
+      "narration": {
+        "id": "Berbagi dengan teman membuat hati riang. Alhamdulillah!",
+        "en": "Sharing with friends makes the heart glad. Alhamdulillah!"
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "toto",
+          "praise": {
+            "id": "Sampai jumpa di kisah berikutnya!",
+            "en": "See you in the next story!"
+          }
+        }
+      ],
+      "sfx": "sparkle",
+      "audio": { "mode": "tts", "captions": [] }
+    }
+  ],
+  "hikmah": {
+    "id": "Berbagi membuat hati senang.",
+    "en": "Sharing makes our hearts happy.",
+    "prompts": [
+      {
+        "id": "Siapa yang kamu ajak berbagi hari ini?",
+        "en": "Who will you share with today?"
+      },
+      {
+        "id": "Bagaimana perasaanmu saat berbagi dengan teman?",
+        "en": "How do you feel when you share with a friend?"
+      }
+    ]
+  }
+}

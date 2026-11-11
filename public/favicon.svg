@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- KisahQ: a rambutan-red story book with a batik star -->
+  <rect x="4" y="8" width="44" height="48" rx="6" fill="#c94f76"/>
+  <rect x="16" y="8" width="44" height="48" rx="6" fill="#e5525e"/>
+  <path d="M38 26l3.2 6.4 7.1 1-5.1 5 1.2 7-6.4-3.3-6.4 3.3 1.2-7-5.1-5 7.1-1z" fill="#f8d16b"/>
+</svg>

@@ -1,0 +1,40 @@
+name: CI
+
+# Pull-request gate: build + typecheck + story-pipeline validation + tests +
+# Worker config validation. NO deploy job: the Cloudflare token repo-secret
+# does not exist yet; deploys run locally via scripts/deploy.sh after merge.
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run check
+
+      # The repo IS the story factory: no story merges without passing gates.
+      - name: Validate stories (hikmah + i18n parity + audio consistency)
+        run: npm run validate:stories
+
+      - run: npm test
+
+      - run: npm run build
+
+      - name: Validate Worker config (no deploy, no auth needed)
+        run: npx --no-install wrangler deploy --dry-run

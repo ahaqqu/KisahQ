@@ -1,0 +1,11 @@
+{
+  "id": "toto",
+  "name": "Toto si Kura-kura",
+  "species": "Kura-kura",
+  "role": {
+    "id": "Kura-kura yang baik hati dan tekun",
+    "en": "A kind and steady turtle"
+  },
+  "traits": ["baik hati", "tekun", "suka membantu teman"],
+  "artNotes": "Dome shell in moss green with darker spots, cream-green head with big friendly eyes, slow steady smile. Batik-pattern band accent on the shell."
+}

@@ -1,0 +1,4 @@
+# Ensure shell scripts are checked out with the executable bit set.
+*.sh text eol=lf
+scripts/*.sh text eol=lf mode=755
+scripts/**/*.sh text eol=lf mode=755

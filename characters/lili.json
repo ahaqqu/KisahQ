@@ -1,0 +1,11 @@
+{
+  "id": "lili",
+  "name": "Lili si Kelinci",
+  "species": "Kelinci",
+  "role": {
+    "id": "Kelinci yang lincah dan ceria",
+    "en": "A cheerful, springy rabbit"
+  },
+  "traits": ["lincah", "ceria", "suka melompat"],
+  "artNotes": "Cream-white fur, long ears with pink inner ear, tiny rose nose, round blush cheeks."
+}
