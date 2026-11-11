@@ -19,6 +19,7 @@
     "verify:browser": "node scripts/verify-story.mjs"
   },
   "devDependencies": {
+    "@andresaya/edge-tts": "1.9.1",
     "@types/node": "26.6.6",
     "gsap": "3.15.1",
     "hyperframes": "0.9.35",

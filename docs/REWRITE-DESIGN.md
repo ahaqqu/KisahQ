@@ -9,12 +9,14 @@ Evidence in this branch: `compositions/poc.html` renders to a byte-deterministic
 
 | Check | Result |
 | --- | --- |
-| Render command | `HYPERFRAMES_NO_TELEMETRY=1 npx hyperframes render -c compositions/poc.html -o videos/poc.mp4` |
+| Render command | `HYPERFRAMES_NO_TELEMETRY=1 HYPERFRAMES_NO_AUTO_INSTALL=1 HYPERFRAMES_NO_UPDATE_CHECK=1 npx hyperframes render -c compositions/poc.html -o videos/poc.mp4` |
 | Output | h264 MP4, 1280x720, 30 fps, 360 frames, exactly 12.000000 s, 771 KB (~526 kbps) |
 | Capture path | `beginframe capture · hardware gpu` (fast path; pinned chrome-headless-shell 152.0.7977.30 auto-found in `~/.cache/hyperframes/chrome/`) |
 | Wall-clock | 11.5 s and 17.8 s for 12 s @ 720p30 (3 workers; variance from background load) ≈ 1.0–1.5x realtime |
 | Determinism | **Byte-identical**: two renders → same sha256 (`e2114c18…`). Same-machine determinism confirmed; cross-machine requires `--docker` (pins Chromium, fonts, encoder) |
-| Visual check | Frames at 5 s / 9.7 s: Bold Flat Pop palette, hard ink offset shadows, bundled Nunito resolves, dimple dots render, fade transition lands |
+| Visual check | Frames at 5 s / 9.7 s: Bold Flat Pop palette, hard ink offset shadows, rounded display type, dimple dots render, fade transition lands |
+
+**Font truth (correction of an earlier "bundled Nunito" claim):** the POC's rounded look is NOT a bundled font. No Nunito/Poppins font file exists on this machine (exhaustive `fc-list` + filesystem search), the pinned chrome-headless-shell 152.0.7977.30 bundles no fonts, and hyperframes bundles only Inter / JetBrains Mono / EB Garamond presets. `"Nunito"` / `"Poppins"` in the composition font stack resolve through a machine-local fontconfig substitution. Same-machine determinism is unaffected (renders stay byte-identical), but typography is currently fontconfig luck and would drift on another machine — PR-B MUST commit real `@font-face` fonts to close this (see §7 and §9.6).
 
 Extrapolation for the target catalog: a ~90 s story ≈ 90–135 s per render; 2 languages × 2 stories ≈ 6–9 min total on this laptop (i7-8550U, 8 cores). CI smoke test (one 12 s composition) fits comfortably in a CI window.
 
@@ -26,6 +28,7 @@ Stack facts verified from primary sources (repo README + shipped agent skills + 
 - **Composition format:** HTML file, `#root[data-composition-id]` with `data-start` / `data-duration` (seconds) / `data-width` / `data-height` / `data-fps`; timed elements carry `class="clip"` + `data-start` + `data-duration`; each composition registers ONE paused GSAP timeline as `window.__timelines["<composition-id>"]` after its tweens; `fromTo` only (seek-back drift), never `repeat: -1`, never `Date.now()` / unseeded `Math.random()` / mid-render fetches.
 - **Audio tracks:** `<audio id="..." class="clip" data-start data-duration? data-volume? data-fade-in? data-fade-out? data-media-start? src="assets/...">` — every `<audio>` needs an `id` or it is excluded from the mix; producer mixes at encode (FFmpeg), gain up to +12 dB, `data-automation` envelopes supported.
 - **Telemetry:** usage counters, disable with env `HYPERFRAMES_NO_TELEMETRY=1` — set in every script and CI job (zero-telemetry canon).
+- **Version freeze:** with only the telemetry opt-out set, an attended (non-CI, TTY) run still performs update checks and can background-install silent 0.9.x upgrades (`scheduleBackgroundInstall`) — the CLI can mutate itself between runs. The render-standard env is therefore **`HYPERFRAMES_NO_TELEMETRY=1 HYPERFRAMES_NO_AUTO_INSTALL=1 HYPERFRAMES_NO_UPDATE_CHECK=1`** in every attended script and environment; CI is already safe via its own isCI gate. `scripts/render-stories.mjs` (PR-B) exports all three.
 - **Determinism contract:** frame clock = `floor(frame)/fps` integer math; GSAP timelines seeked, never played; capture via `HeadlessExperimental.beginFrame` (needs chrome-headless-shell — `npx hyperframes browser ensure` downloads a version-pinned build, keeping pixel output stable across runs on one machine).
 
 ---
@@ -108,7 +111,7 @@ Character canon guardrails stay in the art modules (single source of truth), so 
 node scripts/render-stories.mjs [slug] [--lang id,en] [--quality looks]
   per slug × lang:
     1. validate composition (scripts/validate-compositions.mjs gate)
-    2. HYPERFRAMES_NO_TELEMETRY=1 npx hyperframes render
+    2. HYPERFRAMES_NO_TELEMETRY=1 HYPERFRAMES_NO_AUTO_INSTALL=1 HYPERFRAMES_NO_UPDATE_CHECK=1 npx hyperframes render
          -c compositions/<slug>-<lang>.html -o videos/<slug>/<lang>.mp4
          --fps 30 --quality looks     (delivery for the final pass)
     3. poster: ffmpeg -ss <title-hold> -i <mp4> -frames:v 1 videos/<slug>/<lang>.jpg
@@ -144,13 +147,13 @@ node scripts/render-stories.mjs [slug] [--lang id,en] [--quality looks]
 
 ## 7. PR series
 
-**PR-A — HyperFrames scaffold (this branch's continuation)**
-Files: `package.json`/`bun.lock` (devDeps: `hyperframes@0.9.35`, `gsap`, `tsx`, `@andresaya/edge-tts`), `assets/vendor/gsap.min.js`, `compositions/poc.html`, `compositions/_template.html`, `scripts/build-compositions.mjs` (skeleton + art import proof), `scripts/validate-compositions.mjs`, `scripts/render-stories.mjs`, `scripts/render-stingers.mjs`, `.gitignore` (videos/, .hyperframes/), `docs/REWRITE-DESIGN.md`, CI workflow `.github/workflows/composition-check.yml`, tests (`composition-build.test.ts` skeleton).
-Gates: poc render documented; `validate:compositions` green; vitest green.
+**PR-A — HyperFrames scaffold (delivered: this branch, poc commit + review-fix commit)**
+Files: `compositions/poc.html` (12 s deterministic render, §0), `docs/REWRITE-DESIGN.md`, `package.json` + `package-lock.json` (devDeps pinned exact: `hyperframes@0.9.35`, `gsap@3.15.1`; the review-fix commit also commits `@andresaya/edge-tts` as a devDependency — authoring-time tool kept installed for the in-flight draft-video work, formally used in PR-B; npm `package-lock.json` is the canonical lockfile — `bun.lock` is gitignored, local installs use bun), `assets/vendor/gsap.min.js` (vendored, byte-verified against the official npm tarball), `.gitignore` (videos/, .hyperframes/, bun.lock).
+Gates: poc render documented (§0); vitest green; tsc green. There is NO `validate:compositions` gate yet — it arrives with PR-B.
 
-**PR-B — Story 1 (berbagi-rambutan) ID+EN**
-Files: `assets/voice/berbagi-rambutan/{id,en}/<beat>.mp3` (18 files), `assets/sfx/*.mp3`, `compositions/berbagi-rambutan-{id,en}.html` (generated), narration script JSON (word timings), validator extension for full stories, `videos/` render evidence in PR description.
-Gates: validator green incl. hikmah parity; local render of both languages; poster extracted; canon greps pass.
+**PR-B — Story 1 (berbagi-rambutan) ID+EN + pipeline scaffold**
+Scaffold originally planned for PR-A, relocated here (review round B2 — none of it exists yet on this branch): `compositions/_template.html`, `scripts/build-compositions.mjs`, `scripts/validate-compositions.mjs` (introduces the `validate:compositions` gate), `scripts/render-stories.mjs`, `scripts/render-stingers.mjs`, CI workflow `.github/workflows/composition-check.yml`, tests (`composition-build.test.ts` skeleton), **committed `@font-face` fonts (`assets/fonts/`, e.g. Nunito woff2 — REQUIRED for deterministic typography, §9.6)**. Plus the story content: `assets/voice/berbagi-rambutan/{id,en}/<beat>.mp3` (18 files), `assets/sfx/*.mp3`, `compositions/berbagi-rambutan-{id,en}.html` (generated), narration script JSON (word timings), validator extension for full stories, `videos/` render evidence in PR description.
+Gates: validator green incl. hikmah parity; local render of both languages; poster extracted; canon greps pass; committed `@font-face` fonts render deterministically (no fontconfig dependence, §9.6).
 
 **PR-C — Story 2 (qila-ezra-truk-hilang) ID+EN**
 Files: `assets/voice/qila-ezra-truk-hilang/{id,en}/<beat>.mp3` (22 files), `compositions/qila-ezra-truk-hilang-{id,en}.html`, prop-cue tweens (truk hidden→found, peta, rumah-truk).
@@ -169,6 +172,6 @@ Characters (Qila hijab ALWAYS; Ezra lesung pipi EVERY render), hikmah in BOTH la
 1. **Render time on laptop:** measured 1.0–1.5x realtime at 720p30. A 4-story × 2-language catalog re-render ≈ 6–9 min — fine. At 1080p or 60 fps it doubles; stay at 720p30 (toddler tablets; matches POC).
 2. **R2 delivery shape (decision):** recommended public R2 bucket + `cdn.kisahq.ahaqqu.com` custom domain (zero worker script, preserves "assets-only Worker" deploy property) vs the issue's "streamed via Worker route" (adds a worker script + server logic). Needs owner sign-off either way; both use the same `videos/<slug>/<lang>.mp4` layout.
 3. **Edge-tts endpoint reliability:** keyless Microsoft endpoint, no SLA; occasional 403/latency spikes are reported upstream. Mitigations: narration is authoring-time only (a flaky endpoint never breaks CI or runtime), MP3s are committed, Python `uvx edge-tts` fallback verified, Google/ElevenLabs upgrade path wired via MANUAL_ACTIONS when keys exist.
-4. **HyperFrames version churn:** 0.9.x moves fast (0.9.34→0.9.35 within days). Pin exactly in devDeps; render script asserts the installed version matches the lockfile; treat minor bumps as opt-in re-render events. Determinism is per-machine; if a cross-machine re-render ever matters, `render --docker` pins the whole toolchain (Docker 29.9.2 present).
+4. **HyperFrames version churn:** 0.9.x moves fast (0.9.34→0.9.35 within days). Pin exactly in devDeps; render script asserts the installed version matches the lockfile; treat minor bumps as opt-in re-render events. Attended runs also set `HYPERFRAMES_NO_AUTO_INSTALL=1` / `HYPERFRAMES_NO_UPDATE_CHECK=1` (§0 render standard) so the CLI cannot background-upgrade itself between runs; CI is safe via its isCI gate. Determinism is per-machine; if a cross-machine re-render ever matters, `render --docker` pins the whole toolchain (Docker 29.9.2 present).
 5. **Repo-root `index.html` collision:** HyperFrames' project commands (`check`, `preview`) treat repo-root `index.html` as a root composition, which is the Vite app's file — they collide. Mitigation in PR-A: per-composition `render -c` / explicit file linting (POC path, works today); if Studio preview becomes wanted later, a dedicated `video/` subproject directory is the escape hatch. Flagged so PR-A doesn't silently break `hyperframes check`.
-6. **Bundled fonts cover Latin only at few weights:** Indonesian and English are Latin-script, and Nunito/Poppins resolve by name — verified in POC frames. Any future Arabic-script text (e.g. full bismillah calligraphy) needs `@font-face` files in `assets/fonts/`.
+6. **Typography is fontconfig substitution until PR-B commits real fonts:** no Nunito/Poppins file exists on the render machine (exhaustive `fc-list` + filesystem check); the pinned chrome-headless-shell bundles no fonts; hyperframes bundles only Inter / JetBrains Mono / EB Garamond. `"Nunito"` / `"Poppins"` render via a machine-local fontconfig substitution — same-machine renders stay byte-identical, but the look is luck across machines. **PR-B MUST commit real `@font-face` fonts (e.g. Nunito woff2 under `assets/fonts/`) for deterministic typography.** Latin-script ID/EN text is covered once fonts are committed; any future Arabic-script text (e.g. full bismillah calligraphy) additionally needs an Arabic-capable font file.

@@ -8,7 +8,7 @@
   ink #262238, coral #FF5D5D, teal #19B3A6, sun #FFC53D, cream #FFF3E2.
 
   Render (repo root):
-    HYPERFRAMES_NO_TELEMETRY=1 npx hyperframes render -c compositions/poc.html -o videos/poc.mp4
+    HYPERFRAMES_NO_TELEMETRY=1 HYPERFRAMES_NO_AUTO_INSTALL=1 HYPERFRAMES_NO_UPDATE_CHECK=1 npx hyperframes render -c compositions/poc.html -o videos/poc.mp4
 -->
 <html lang="id">
   <head>
@@ -23,6 +23,16 @@
         --teal: #19b3a6;
         --sun: #ffc53d;
         --magenta: #e84a8a;
+        /*
+          Font reality: no "Nunito"/"Poppins" file exists on this machine, the
+          pinned chrome-headless-shell bundles no fonts, and hyperframes bundles
+          only Inter/JetBrains Mono/EB Garamond — these names resolve via a
+          machine-local fontconfig substitution, which is what produces the
+          rounded look. Stack is left as-is (the PR-B target families + generic
+          fallback) because any rename would change rendered bytes and stale the
+          §0 sha256 evidence. Same-machine renders stay deterministic; PR-B must
+          commit real @font-face fonts under assets/fonts/ — docs/REWRITE-DESIGN.md §9.6.
+        */
         --font-display: "Nunito", "Poppins", sans-serif;
       }
       * {
