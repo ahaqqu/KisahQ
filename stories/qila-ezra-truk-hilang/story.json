@@ -1,0 +1,293 @@
+{
+  "slug": "qila-ezra-truk-hilang",
+  "title": {
+    "id": "Qila dan Ezra: Truk Ezra Hilang!",
+    "en": "Qila and Ezra: Ezra's Truck Is Missing!"
+  },
+  "ageBand": "3-4",
+  "characters": ["qila", "ezra"],
+  "scenes": [
+    {
+      "id": "pembuka-bermain",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "happy" },
+        { "character": "ezra", "pose": "jump" }
+      ],
+      "narration": {
+        "id": "Bismillah… yuk mulai! Qila dan Ezra bermain truk.",
+        "en": "Bismillah… let's begin! Qila and Ezra play with the truck."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "ezra",
+          "praise": {
+            "id": "Brrm! Truknya melaju kencang!",
+            "en": "Vroom! The truck zooms so fast!"
+          }
+        }
+      ],
+      "sfx": "chime",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "beres-beres",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "idle" },
+        { "character": "ezra", "pose": "idle" }
+      ],
+      "narration": {
+        "id": "Matahari sore. Saatnya merapikan mainan. Eh! Truk Ezra hilang!",
+        "en": "The sun is low. Tidy-up time! Oh no — Ezra's truck is gone!"
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "ezra",
+          "praise": {
+            "id": "Ezra sedih. Yuk, cari bersama!",
+            "en": "Ezra is sad. Let's look together!"
+          }
+        }
+      ],
+      "sfx": "pop",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "qila-cerewet",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "idle" },
+        { "character": "ezra", "pose": "idle" }
+      ],
+      "narration": {
+        "id": "\"Kakak sudah bilang, taruh mainan di tempatnya!\" kata Qila.",
+        "en": "\"I said, toys go back in their place!\" says Qila."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "qila",
+          "praise": {
+            "id": "Qila cerewet saat lelah, ya.",
+            "en": "Qila gets fussy when she is tired."
+          }
+        }
+      ],
+      "sfx": "pluck",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "qila-sayang-adik",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "happy" },
+        { "character": "ezra", "pose": "idle" }
+      ],
+      "narration": {
+        "id": "Qila melihat wajah sedih Ezra. Dia memeluk Ezra: \"Kakak ada di sini.\"",
+        "en": "Qila sees Ezra's sad face. She hugs him: \"I am here.\""
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "qila",
+          "praise": {
+            "id": "Pelukan kakak membuat hati hangat.",
+            "en": "A big sister's hug warms hearts."
+          }
+        }
+      ],
+      "sfx": "chime",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "peta-mainan",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "wave" },
+        { "character": "ezra", "pose": "happy" }
+      ],
+      "narration": {
+        "id": "Qila punya ide seru: peta mainan! \"Ayo cari truk seperti petualangan!\"",
+        "en": "Qila has a fun idea: a toy map! \"Let's hunt for the truck!\""
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "qila",
+          "praise": {
+            "id": "Petualangan dimulai! Siap, Ezra?",
+            "en": "The adventure starts! Ready, Ezra?"
+          }
+        }
+      ],
+      "sfx": "sparkle",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "intip-tempat-tidur",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "idle" },
+        { "character": "ezra", "pose": "jump" }
+      ],
+      "narration": {
+        "id": "Qila memimpin: \"Intip bawah tempat tidur!\" Ezra berani intip duluan.",
+        "en": "Qila leads: \"Peek under the bed!\" Ezra bravely peeks first."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "ezra",
+          "praise": {
+            "id": "Hih! Hanya debu dan kaus kaki!",
+            "en": "Hee! Only dust and socks!"
+          }
+        }
+      ],
+      "sfx": "whoosh",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "guncang-sofa",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "happy" },
+        { "character": "ezra", "pose": "jump" }
+      ],
+      "narration": {
+        "id": "Qila mengguncang bantal sofa. Kloit kloit! Tidak ada truk.",
+        "en": "Qila puffs the sofa cushions. Puff puff! No truck here."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "qila",
+          "praise": {
+            "id": "Bantalnya beterbangan lucu sekali!",
+            "en": "Flying cushions look so funny!"
+          }
+        }
+      ],
+      "sfx": "shake",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "ikuti-jejak-roda",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "wave" },
+        { "character": "ezra", "pose": "happy" }
+      ],
+      "narration": {
+        "id": "Ezra menemukan jejak roda kecil! \"Ikuti jejaknya, kakak!\"",
+        "en": "Ezra spots tiny wheel tracks! \"Follow the trail, sis!\""
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "ezra",
+          "praise": {
+            "id": "Detektif kecil menemukan petunjuk!",
+            "en": "Little detectives found a clue!"
+          }
+        }
+      ],
+      "sfx": "pluck",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "ketemu-truk",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "happy" },
+        { "character": "ezra", "pose": "jump" }
+      ],
+      "narration": {
+        "id": "Di balik pot, ada truknya! \"Truknya ikut sembunyi-sembunyi, hihi!\" Lesung pipit Ezra melebar.",
+        "en": "Behind the pot — the truck! \"The truck was playing hide-and-seek, hihi!\" Ezra's dimples grow wide."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "ezra",
+          "praise": {
+            "id": "Alhamdulillah ya, Alhamdulillah ketemu.",
+            "en": "Alhamdulillah, we found it together!"
+          }
+        }
+      ],
+      "sfx": "sparkle",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "rumah-truk",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "happy" },
+        { "character": "ezra", "pose": "happy" }
+      ],
+      "narration": {
+        "id": "Qila memimpin: \"Ayo buat rumah truk!\" Truk punya rumah baru.",
+        "en": "Qila leads: \"Let's build a truck house!\" The truck has a new home."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "qila",
+          "praise": {
+            "id": "Truk senang punya rumah baru!",
+            "en": "The truck loves its new home!"
+          }
+        }
+      ],
+      "sfx": "chime",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "syukur-penutup",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "wave" },
+        { "character": "ezra", "pose": "jump" }
+      ],
+      "narration": {
+        "id": "Ezra memeluk Qila: \"Kakak hebat!\" Bermain jadi ringan. Alhamdulillah!",
+        "en": "Ezra hugs Qila: \"You are the best!\" Playing feels light now. Alhamdulillah!"
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "ezra",
+          "praise": {
+            "id": "Saling bantu, hati pun senang!",
+            "en": "Helping each other makes hearts happy!"
+          }
+        }
+      ],
+      "sfx": "sparkle",
+      "audio": { "mode": "tts", "captions": [] }
+    }
+  ],
+  "hikmah": {
+    "id": "Kakak dan adik yang saling bantu, masalah jadi ringan.",
+    "en": "When siblings help each other, every problem gets lighter.",
+    "prompts": [
+      {
+        "id": "Apa yang Qila lakukan supaya Ezra tidak sedih lagi?",
+        "en": "What did Qila do to help Ezra feel better?"
+      },
+      {
+        "id": "Kalau mainanmu hilang, siapa yang kamu minta bantu?",
+        "en": "If your toy goes missing, who do you ask for help?"
+      },
+      {
+        "id": "Apa yang kamu katakan saat sesuatu yang hilang ketemu?",
+        "en": "What do you say when something lost is found?"
+      }
+    ]
+  }
+}
