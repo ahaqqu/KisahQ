@@ -14,6 +14,7 @@ export class ElevenLabsProvider implements AudioProvider {
   readonly label = { id: 'ElevenLabs (perlu kunci)', en: 'ElevenLabs (needs a key)' }
 
   private audio: HTMLAudioElement | undefined
+  private objectUrl: string | undefined
   private settle: (() => void) | undefined
 
   isConfigured(): boolean {
@@ -23,8 +24,16 @@ export class ElevenLabsProvider implements AudioProvider {
   cancel(): void {
     this.audio?.pause()
     this.audio = undefined
+    this.revokeObjectUrl()
     this.settle?.()
     this.settle = undefined
+  }
+
+  private revokeObjectUrl(): void {
+    if (this.objectUrl) {
+      URL.revokeObjectURL(this.objectUrl)
+      this.objectUrl = undefined
+    }
   }
 
   async speak(request: SpeakRequest): Promise<void> {
@@ -65,16 +74,17 @@ export class ElevenLabsProvider implements AudioProvider {
     return new Promise<void>((resolve) => {
       const audio = new Audio(src)
       this.audio = audio
+      if (src.startsWith('blob:')) this.objectUrl = src
       this.settle = () => {
         request.onEnd?.()
         resolve()
       }
       audio.onended = () => {
-        if (src.startsWith('blob:')) URL.revokeObjectURL(src)
+        this.revokeObjectUrl()
         this.settle?.()
       }
       audio.onerror = () => {
-        if (src.startsWith('blob:')) URL.revokeObjectURL(src)
+        this.revokeObjectUrl()
         request.onError?.()
         resolve()
       }
