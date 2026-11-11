@@ -84,6 +84,9 @@ export class StoryPlayer {
     const scene = this.currentScene()
     this.sceneDone = false
     this.hintShownForScene = false
+    // The next button is shared across scenes (it lives in the hud): re-hide
+    // it so "Lanjut" only appears after THIS scene's interaction completes.
+    this.root.querySelector<HTMLButtonElement>('.next-btn')?.classList.add('hidden')
 
     const slot = this.root.querySelector<HTMLElement>('.stage-slot')
     if (!slot) return
@@ -330,8 +333,10 @@ export class StoryPlayer {
   private bindTapInteraction(stage: HTMLElement, page: HTMLElement, interaction: Extract<Interaction, { type: 'tap' }>): void {
     stage.addEventListener('click', (event) => {
       if (this.sceneDone || this.flipping) return
-      const element = (event.target as HTMLElement).closest('[data-target]')
-      if (element instanceof HTMLElement && element.dataset.target === interaction.target) {
+      // Element, not HTMLElement: interaction targets include SVG groups
+      // (the count fruits) — an HTMLElement check rejects every SVG tap.
+      const element = (event.target as Element).closest('[data-target]')
+      if (element && (element as HTMLElement).dataset.target === interaction.target) {
         this.completeInteraction(page, () => this.showPraise(page, interaction.praise))
       } else if (!this.hintShownForScene) {
         this.hintShownForScene = true
@@ -345,8 +350,10 @@ export class StoryPlayer {
     let tapped = 0
     stage.addEventListener('click', (event) => {
       if (this.sceneDone || this.flipping) return
-      const fruit = (event.target as HTMLElement).closest('.count-fruit:not(.count-fruit--collected)')
-      if (!(fruit instanceof HTMLElement)) {
+      // Element, not HTMLElement: .count-fruit groups are SVG elements, and
+      // an HTMLElement check rejected every real fruit tap (the D1 lock).
+      const fruit = (event.target as Element).closest('.count-fruit:not(.count-fruit--collected)')
+      if (!(fruit instanceof Element)) {
         if (!this.hintShownForScene) {
           this.hintShownForScene = true
           this.showHint(page)

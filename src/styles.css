@@ -261,6 +261,23 @@ button {
   inset: 0;
 }
 
+/* Layout containers must never intercept taps aimed at each other's painted
+   art: their DIV boxes span wide transparent areas (the full-width .actors
+   band soft-locked the scene-3 tree tap and the fruit row — elementFromPoint
+   returned .actors). Containers are hit-test dead; their SVGs re-enable hit
+   testing ONLY over painted pixels (visiblePainted), so transparent corners
+   pass taps through to whatever is behind. (thermos D1) */
+.actors,
+.actor,
+.prop {
+  pointer-events: none;
+}
+
+.actor svg,
+.prop svg {
+  pointer-events: visiblePainted;
+}
+
 .prop {
   position: absolute;
 }
@@ -287,7 +304,10 @@ button {
 }
 
 .scenery__water {
-  left: 30%;
+  /* Clear of the actors' painted art at narrow stages: at left 30% the
+     pitcher sat behind Lili's body at 320px — no tappable water pixels
+     existed (probe: scene 8 target unreachable). (thermos D1 method) */
+  left: 4%;
   bottom: 13%;
   width: min(20%, 120px);
 }
@@ -318,12 +338,18 @@ button {
   justify-content: center;
   align-items: flex-end;
   gap: 2%;
+  /* The container box spans the full stage width: its empty areas must
+     never intercept taps aimed at props behind it (it soft-locked the tree
+     tap on scene 3 and the fruit row — elementFromPoint returned .actors).
+     Children re-enable pointer events. (thermos D1) */
+  pointer-events: none;
 }
 
 .actor {
   position: relative;
   width: clamp(96px, 24vw, 170px);
   transition: transform 0.15s ease;
+  pointer-events: auto;
 }
 
 .actor svg {
