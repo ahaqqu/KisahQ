@@ -1,10 +1,16 @@
+import { renderQilaEzraBackground, type QilaEzraBackgroundKey } from './qila-ezra'
+
 /**
  * Backgrounds as layered inline SVG for parallax (2–3 layers that drift with
  * pointer/drag). Nusantara settings per the design language: kampung house,
  * sawah paddies, rambutan tree, warm pastel palette.
+ *
+ * Story-specific backgrounds live in their own modules and are dispatched by
+ * key below — Story 2's Bold Flat Pop rooms (kamar-ezra / ruang-tamu)
+ * delegate to src/art/qila-ezra.ts.
  */
 
-export type BackgroundKey = 'orchard'
+export type BackgroundKey = 'orchard' | QilaEzraBackgroundKey
 
 interface Layer {
   className: string
@@ -13,7 +19,7 @@ interface Layer {
 
 /** Layered background. layer 1 = far (sky), 2 = mid (kampung), 3 = near (ground). */
 export function renderBackground(key: BackgroundKey): Layer[] {
-  if (key === 'orchard') return orchardLayers()
+  if (key === 'kamar-ezra' || key === 'ruang-tamu') return renderQilaEzraBackground(key)
   return orchardLayers()
 }
 

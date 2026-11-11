@@ -9,7 +9,7 @@
   "scenes": [
     {
       "id": "pembuka-bermain",
-      "bg": "orchard",
+      "bg": "ruang-tamu",
       "actors": [
         { "character": "qila", "pose": "happy" },
         { "character": "ezra", "pose": "jump" }
@@ -33,7 +33,7 @@
     },
     {
       "id": "beres-beres",
-      "bg": "orchard",
+      "bg": "ruang-tamu",
       "actors": [
         { "character": "qila", "pose": "idle" },
         { "character": "ezra", "pose": "idle" }
@@ -57,7 +57,7 @@
     },
     {
       "id": "qila-cerewet",
-      "bg": "orchard",
+      "bg": "ruang-tamu",
       "actors": [
         { "character": "qila", "pose": "idle" },
         { "character": "ezra", "pose": "idle" }
@@ -81,7 +81,7 @@
     },
     {
       "id": "qila-sayang-adik",
-      "bg": "orchard",
+      "bg": "ruang-tamu",
       "actors": [
         { "character": "qila", "pose": "happy" },
         { "character": "ezra", "pose": "idle" }
@@ -105,7 +105,7 @@
     },
     {
       "id": "peta-mainan",
-      "bg": "orchard",
+      "bg": "ruang-tamu",
       "actors": [
         { "character": "qila", "pose": "wave" },
         { "character": "ezra", "pose": "happy" }
@@ -129,7 +129,7 @@
     },
     {
       "id": "intip-tempat-tidur",
-      "bg": "orchard",
+      "bg": "kamar-ezra",
       "actors": [
         { "character": "qila", "pose": "idle" },
         { "character": "ezra", "pose": "jump" }
@@ -153,7 +153,7 @@
     },
     {
       "id": "guncang-sofa",
-      "bg": "orchard",
+      "bg": "ruang-tamu",
       "actors": [
         { "character": "qila", "pose": "happy" },
         { "character": "ezra", "pose": "jump" }
@@ -177,7 +177,7 @@
     },
     {
       "id": "ikuti-jejak-roda",
-      "bg": "orchard",
+      "bg": "kamar-ezra",
       "actors": [
         { "character": "qila", "pose": "wave" },
         { "character": "ezra", "pose": "happy" }
@@ -201,7 +201,7 @@
     },
     {
       "id": "ketemu-truk",
-      "bg": "orchard",
+      "bg": "kamar-ezra",
       "actors": [
         { "character": "qila", "pose": "happy" },
         { "character": "ezra", "pose": "jump" }
@@ -225,7 +225,7 @@
     },
     {
       "id": "rumah-truk",
-      "bg": "orchard",
+      "bg": "kamar-ezra",
       "actors": [
         { "character": "qila", "pose": "happy" },
         { "character": "ezra", "pose": "happy" }
@@ -249,7 +249,7 @@
     },
     {
       "id": "syukur-penutup",
-      "bg": "orchard",
+      "bg": "kamar-ezra",
       "actors": [
         { "character": "qila", "pose": "wave" },
         { "character": "ezra", "pose": "jump" }

@@ -1,4 +1,5 @@
 import type { Pose } from '../story/types'
+import { QILA_EZRA_CHARACTERS } from './qila-ezra'
 
 /**
  * Hand-coded flat character art (no external assets). Big shapes, pastel
@@ -6,6 +7,9 @@ import type { Pose } from '../story/types'
  * loops (blink/breathe/bob) are CSS keyframes driven by classes on the
  * wrapper — animation only runs as ambient support for narration
  * (see the creative-presentation research rule).
+ *
+ * Story-specific cast lives in its own module (src/art/qila-ezra.ts) and is
+ * spread in below — the engine registry stays one flat id → def map.
  */
 
 export interface CharacterDef {
@@ -126,4 +130,7 @@ export const CHARACTERS: Record<string, CharacterDef> = {
       </g>
     </svg>`,
   },
+  // Story 2 cast (Qila & Ezra) — merged from the personal-cast module so the
+  // scene player resolves them by id like every other actor.
+  ...QILA_EZRA_CHARACTERS,
 }
