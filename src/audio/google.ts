@@ -41,21 +41,23 @@ export class GoogleTtsProvider implements AudioProvider {
     }
     const voice = readSetting(AUDIO_SETTINGS_KEYS.googleVoice) || DEFAULT_VOICE
     try {
-      const response = await fetch(
-        `https://texttospeech.googleapis.com/v1/text:synthesize?key=${encodeURIComponent(key)}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            input: { text: request.text },
-            voice: {
-              languageCode: request.lang === 'id' ? 'id-ID' : 'en-US',
-              name: voice,
-            },
-            audioConfig: { audioEncoding: 'MP3', speakingRate: 0.9 },
-          }),
+      // The key travels ONLY in the x-goog-api-key header — never in the URL
+      // query string (URLs land in logs/proxies; headers do not).
+      const response = await fetch('https://texttospeech.googleapis.com/v1/text:synthesize', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': key,
         },
-      )
+        body: JSON.stringify({
+          input: { text: request.text },
+          voice: {
+            languageCode: request.lang === 'id' ? 'id-ID' : 'en-US',
+            name: voice,
+          },
+          audioConfig: { audioEncoding: 'MP3', speakingRate: 0.9 },
+        }),
+      })
       const json = (await response.json()) as SynthesizeResponse
       if (!response.ok || !json.audioContent) {
         throw new Error(json.error?.message ?? 'Google TTS error')
