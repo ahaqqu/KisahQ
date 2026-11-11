@@ -72,7 +72,7 @@ npm run build          # production build (dist/) incl. stories copy
 npm run check          # tsc --noEmit
 npm run test           # vitest
 npm run validate:stories
-npm run deploy -- cloudflare  # via scripts/deploy.sh (maintainer)
+./scripts/deploy.sh cloudflare   # maintainer deploy (single entrypoint)
 ```
 
 Commits: conventional commits. Never push directly to `main` — PRs only, and
