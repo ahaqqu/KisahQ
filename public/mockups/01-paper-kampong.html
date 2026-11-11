@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01 — Diorama Kertas Kampong · KisahQ Mockup</title>
+<style>
+  :root{
+    --cream:#F6EEDD; --kraft:#E8D9B8; --terra:#C96F4A; --brown:#5C4632;
+    --sage:#A8B69B; --rose:#D98E73; --mustard:#E3B23C; --ink:#3A2E22;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:#EFE5CF; color:var(--brown);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    line-height:1.5;
+  }
+  .wrap{ max-width:1120px; margin:0 auto; padding:20px 18px 60px; }
+  header.top{
+    display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+    padding:14px 6px 6px; border-bottom:3px solid var(--terra); margin-bottom:18px;
+  }
+  header.top a{ color:var(--terra); font-weight:700; text-decoration:none; font-size:15px; }
+  header.top a:hover{ text-decoration:underline; }
+  h1{ font-size:26px; margin:0; letter-spacing:.3px; }
+  .sub{ font-size:14px; color:#8A7458; margin:0; }
+  .pager{ margin-left:auto; display:flex; gap:8px; }
+  .pager a{
+    display:inline-block; padding:8px 12px; border-radius:12px; font-size:13px; font-weight:600;
+    background:var(--cream); border:2px solid var(--kraft); color:var(--brown); text-decoration:none;
+  }
+  .tagline{ padding:4px 6px 0; font-size:15px; }
+  .tagline .en{ color:#8A7458; font-size:13px; }
+
+  /* ---------- layout ---------- */
+  .board{ display:grid; grid-template-columns:minmax(0,1fr) 270px; gap:18px; align-items:start; }
+  @media (max-width:900px){ .board{ grid-template-columns:1fr; } }
+  .stage-frame{
+    background:var(--cream); border:3px solid var(--brown); border-radius:6px;
+    box-shadow:0 10px 0 -4px var(--kraft), 0 16px 30px rgba(92,70,50,.25);
+    padding:8px; position:relative;
+  }
+  .stage svg{ display:block; width:100%; height:auto; }
+  .hint{
+    position:absolute; top:10px; left:50%; transform:translateX(-50%);
+    background:var(--mustard); color:var(--brown); border:2px solid var(--brown);
+    border-radius:999px; padding:6px 16px; font-weight:700; font-size:13px;
+    box-shadow:0 3px 0 rgba(92,70,50,.35); pointer-events:none;
+  }
+  .sheet{ display:flex; flex-direction:column; gap:12px; }
+  .sheet h2{ font-size:15px; margin:0 0 4px; text-transform:uppercase; letter-spacing:1px; color:var(--terra); }
+  .sheetcard{
+    background:var(--cream); border:2px solid var(--brown); border-radius:10px; padding:10px 12px;
+    box-shadow:0 4px 0 -1px var(--kraft);
+  }
+  .sheetcard svg{ width:100%; height:auto; display:block; }
+  .sheetrow{ display:flex; gap:8px; }
+  .sheetrow .cell{ flex:1; text-align:center; }
+  .cell small{ display:block; font-size:11px; color:#8A7458; margin-top:2px; }
+  .dimple-note{ font-size:12px; background:#FDF6E4; border:1.5px dashed var(--terra); border-radius:8px; padding:6px 8px; }
+
+  /* ---------- flipbook ---------- */
+  .flip-section{ margin-top:26px; }
+  .flip-section h2{ font-size:16px; color:var(--terra); letter-spacing:.5px; margin:0 0 4px; }
+  .flip-desc{ font-size:13px; color:#8A7458; margin:0 0 12px; }
+  .book-row{ display:flex; align-items:center; justify-content:center; gap:16px; }
+  .book{
+    width:min(560px,86vw); aspect-ratio:5/3; position:relative; perspective:1300px;
+  }
+  .page{
+    position:absolute; inset:0; transform-origin:left center; transform-style:preserve-3d;
+    transition:transform .75s cubic-bezier(.35,.1,.25,1), opacity .75s;
+    border-radius:8px;
+  }
+  .page .face{
+    position:absolute; inset:0; border-radius:8px; overflow:hidden;
+    backface-visibility:hidden; border:2.5px solid var(--brown);
+    box-shadow:0 6px 14px rgba(92,70,50,.28); background:var(--cream);
+  }
+  .page .face svg{ width:100%; height:100%; display:block; }
+  .page .back{
+    transform:rotateY(180deg);
+    background:repeating-linear-gradient(45deg,var(--kraft) 0 10px,var(--cream) 10px 20px);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .page .back span{
+    background:var(--cream); border:2px solid var(--brown); border-radius:999px;
+    padding:8px 18px; font-weight:700; font-size:13px; color:var(--brown);
+  }
+  .page.turn{ transform:rotateY(-168deg); opacity:.4; }
+  .page.under{ z-index:1; } .page.top{ z-index:3; } .page.mid{ z-index:2; }
+  .page.hidden{ display:none; }
+  .pagenum{
+    position:absolute; bottom:8px; right:12px; font-size:12px; font-weight:700; color:#8A7458;
+  }
+  .navbtn{
+    width:72px; height:72px; border-radius:50%; border:3px solid var(--brown);
+    background:var(--mustard); color:var(--brown); font-size:26px; font-weight:800;
+    cursor:pointer; box-shadow:0 5px 0 rgba(92,70,50,.4); touch-action:manipulation;
+  }
+  .navbtn:active{ transform:translateY(3px); box-shadow:0 2px 0 rgba(92,70,50,.4); }
+
+  /* ---------- annotations ---------- */
+  footer.notes{
+    margin-top:30px; border-top:3px solid var(--brown); padding-top:14px;
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;
+  }
+  footer.notes h3{ font-size:13px; text-transform:uppercase; letter-spacing:1px; margin:0 0 8px; color:var(--terra); }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ display:flex; align-items:center; gap:6px; font-size:12px; background:var(--cream); border:1.5px solid var(--kraft); border-radius:8px; padding:4px 8px; }
+  .chip i{ width:18px; height:18px; border-radius:5px; border:1.5px solid rgba(92,70,50,.4); display:inline-block; }
+  .notes p, .notes ul{ font-size:13px; margin:0; }
+  .notes ul{ padding-left:18px; }
+  .notes .en{ color:#8A7458; display:block; font-size:12px; }
+  .moat{ background:var(--cream); border:2px solid var(--terra); border-radius:10px; padding:10px 12px; }
+
+  /* ---------- SVG idle animation ---------- */
+  .wobble{ transform-box:fill-box; transform-origin:50% 100%; animation:wobble 3.4s ease-in-out infinite; }
+  .wobble.ez{ animation-duration:3.9s; animation-delay:.4s; }
+  @keyframes wobble{ 0%,100%{ transform:rotate(-.7deg);} 50%{ transform:rotate(.7deg);} }
+  .char{ transform-box:fill-box; transform-origin:50% 100%; animation:breathe 3.6s ease-in-out infinite; }
+  @keyframes breathe{ 0%,100%{ transform:scaleY(1);} 50%{ transform:scaleY(1.016);} }
+  .eyes{ transform-box:fill-box; transform-origin:50% 50%; animation:blink 4.6s infinite; }
+  @keyframes blink{ 0%,91%,100%{ transform:scaleY(1);} 94%{ transform:scaleY(.12);} 97%{ transform:scaleY(1);} }
+  .layer-plx{ transform:translate(calc(var(--px,0)*6px),calc(var(--py,0)*4px)); }
+  .layer-plx2{ transform:translate(calc(var(--px,0)*3px),calc(var(--py,0)*2px)); }
+  .sway{ transform-box:fill-box; transform-origin:50% 100%; animation:wobble 5s ease-in-out infinite; }
+
+  /* reactions */
+  .react{ transform-box:fill-box; transform-origin:50% 100%; }
+  .react.react-giggle{ animation:rgiggle .55s ease; }
+  @keyframes rgiggle{ 0%{transform:scale(1,1);} 30%{transform:scale(1.08,.92);} 60%{transform:scale(.94,1.06);} 100%{transform:scale(1,1);} }
+  .react.react-jump{ animation:rjump .55s cubic-bezier(.3,.6,.4,1); }
+  @keyframes rjump{ 0%,100%{transform:translateY(0);} 40%{transform:translateY(-16px);} 70%{transform:translateY(0);} 85%{transform:translateY(-5px);} }
+  .react.react-point{ animation:rpoint .6s ease; }
+  @keyframes rpoint{ 0%,100%{transform:rotate(0);} 40%{transform:rotate(-3deg);} 70%{transform:rotate(1.5deg);} }
+  .react.react-nag{ animation:rnag .7s ease; }
+  @keyframes rnag{ 0%,100%{transform:translateX(0);} 25%{transform:translateX(-3px) rotate(-1.2deg);} 55%{transform:translateX(3px) rotate(1.2deg);} 80%{transform:translateX(-2px);} }
+  .react.react-hug{ animation:rhug .9s ease-in-out; }
+  @keyframes rhug{ 0%,100%{transform:scale(1);} 45%{transform:scale(1.05,.97);} }
+
+  .bubble{ opacity:0; transition:opacity .18s; pointer-events:none; }
+  .bubble.show{ opacity:1; }
+  .bubble .bubble-bg{ filter:drop-shadow(0 2px 0 rgba(92,70,50,.3)); }
+  .bubble text{ font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; font-weight:700; font-size:13px; fill:var(--brown); }
+  .qmark{ font-family:system-ui,sans-serif; font-weight:800; font-size:20px; fill:#B58A5A; }
+  @media (prefers-reduced-motion:reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="index.html">&larr; Galeri Mockup</a>
+    <h1>01 · Diorama Kertas Kampong</h1>
+    <span class="sub">Paper-cut Kampung Diorama</span>
+    <nav class="pager"><a href="05-night-window.html">&larr; 05</a><a href="02-soft-pastel-storybook.html">02 &rarr;</a></nav>
+  </header>
+  <p class="tagline">Lapisan kertas bertumpuk ala diorama, bingkai batik mega mendung, karakter potong-kertas yang bergoyang lembut.
+    <span class="en">Layered paper-cut diorama with a mega-mendung batik frame and gently swaying paper characters.</span></p>
+
+  <div class="board">
+    <div class="stage-frame" id="stage">
+      <span class="hint">Ketuk Qila &amp; Ezra! · Tap the characters</span>
+      <svg id="scene" viewBox="0 0 960 560" role="img" aria-label="Kamar Ezra: truk hilang, Qila memimpin pencarian"></svg>
+    </div>
+
+    <aside class="sheet">
+      <div class="sheetcard">
+        <h2>Lembar Karakter · Qila</h2>
+        <div class="sheetrow">
+          <div class="cell"><div id="qila-front"></div><small>depan · front</small></div>
+          <div class="cell"><div id="qila-side"></div><small>samping · side</small></div>
+          <div class="cell"><div id="qila-chip"></div><small>cerewet · nag</small></div>
+        </div>
+      </div>
+      <div class="sheetcard">
+        <h2>Lembar Karakter · Ezra</h2>
+        <div class="sheetrow">
+          <div class="cell"><div id="ezra-front"></div><small>depan · front</small></div>
+          <div class="cell"><div id="ezra-side"></div><small>samping · side</small></div>
+          <div class="cell"><div id="ezra-chip"></div><small>senyum lesung pipit · dimple grin</small></div>
+        </div>
+      </div>
+      <div class="sheetcard dimple-note">
+        <b>Lesung pipit Ezra</b> terlihat di <i>semua</i> ekspresi — diorama kertas memotongnya sebagai lubang kecil di lapisan pipi.
+        <span class="en">Ezra's dimples show in every expression — cut as tiny holes in the cheek paper layer.</span>
+      </div>
+    </aside>
+  </div>
+
+  <section class="flip-section">
+    <h2>Demo Flip Halaman · 3 Lembar</h2>
+    <p class="flip-desc">Contoh transisi pergantian halaman gaya kertas (klik panah). <span class="en">Paper-style page-turn demo — tap the arrow.</span></p>
+    <div class="book-row">
+      <button class="navbtn" id="prevBtn" aria-label="Halaman sebelumnya">&lsaquo;</button>
+      <div class="book" id="book"></div>
+      <button class="navbtn" id="nextBtn" aria-label="Halaman berikutnya">&rsaquo;</button>
+    </div>
+  </section>
+
+  <footer class="notes">
+    <div>
+      <h3>Palet · Palette</h3>
+      <div class="chips">
+        <span class="chip"><i style="background:#F6EEDD"></i>Krem kertas</span>
+        <span class="chip"><i style="background:#E8D9B8"></i>Kraft</span>
+        <span class="chip"><i style="background:#C96F4A"></i>Terakota</span>
+        <span class="chip"><i style="background:#5C4632"></i>Coklat tua</span>
+        <span class="chip"><i style="background:#A8B69B"></i>Sage</span>
+        <span class="chip"><i style="background:#D98E73"></i>Rose (Qila)</span>
+        <span class="chip"><i style="background:#E3B23C"></i>Mustard (Ezra)</span>
+      </div>
+    </div>
+    <div>
+      <h3>Garis &amp; Motif · Line &amp; Motif</h3>
+      <p>Tepi kertas berlapis + bayangan jatuh lembut antar lapisan; bingkai batik <b>mega mendung</b>; grain kertas halus; tanpa gradasi — rata seperti kertas asli.
+      <span class="en">Layered paper edges + soft drop shadows; mega-mendung batik frame; fine paper grain; flat fills like real paper.</span></p>
+    </div>
+    <div>
+      <h3>Inventaris Animasi · Animation Inventory</h3>
+      <ul>
+        <li>Idle: goyang kertas, kedip, napas <span class="en">paper wobble, blink, breathe</span></li>
+        <li>Ketuk: 3 reaksi Qila, 3 reaksi Ezra + balon kata <span class="en">3 tap reactions each + speech bubbles</span></li>
+        <li>Flip halaman kertas + whoosh WebAudio <span class="en">paper page-turn + synthesized whoosh</span></li>
+        <li>Parallax pointer: jendela &amp; perabot <span class="en">pointer parallax on window &amp; props</span></li>
+      </ul>
+    </div>
+    <div class="moat">
+      <h3>Moat</h3>
+      <p><b>Personalisasi kanon keluarga + identitas Nusantara:</b> diorama kertas kampung berisi lore Qila &amp; Ezra — tidak bisa ditiru aplikasi global.
+      <span class="en">Family-canon personalization + Nusantara identity: a kampung paper diorama no global app can copy.</span></p>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* ============ palette (single source for scene + sheets) ============ */
+const P = {
+  skin:'#D9A072', skinDark:'#A96F44', hijab:'#D98E73', hijabDark:'#B96A4E',
+  dress:'#F1E3C4', accent:'#C96F4A', blush:'#E2907C', ink:'#3A2E22',
+  mouth:'#7A3B2E', tongue:'#E58A7A', shoe:'#5C4632',
+  hair:'#2E2418', shirt:'#E3B23C', shirtDark:'#B98A22', shorts:'#6E8C74'
+};
+
+/* ============ character builders (shared geometry, restyled per concept) ============ */
+function qilaFront(expr, pose){
+  const pointArm = pose==='point'
+    ? `<g class="arm"><rect x="72" y="90" width="40" height="12" rx="6" fill="${P.dress}" transform="rotate(-14 74 96)"/><circle cx="111" cy="85" r="6" fill="${P.skin}"/><rect x="111" y="82.6" width="10" height="4.8" rx="2.4" fill="${P.skin}" transform="rotate(-14 111 85)"/></g>`
+    : `<g class="arm"><rect x="80" y="96" width="13" height="42" rx="6.5" fill="${P.dress}" transform="rotate(-9 86 98)"/><circle cx="88" cy="139" r="6" fill="${P.skin}"/></g>`;
+  const brows = `
+    <g class="b-leader">
+      <path d="M46 37 Q52 33 58 36.5" stroke="${P.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M64 36 Q70 34 76 38.5" stroke="${P.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </g>
+    <g class="b-nag">
+      <path d="M45 33 Q52 29.5 58 33" stroke="${P.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M64 34 Q70 30.5 76 34" stroke="${P.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </g>`;
+  const mouths = `
+    <g class="m-leader"><path d="M53 62.5 Q60 70 67 62.5" stroke="${P.ink}" stroke-width="2.6" fill="none" stroke-linecap="round"/></g>
+    <g class="m-nag"><rect x="54.5" y="61" width="11" height="8" rx="3.5" fill="${P.mouth}"/></g>
+    <g class="m-smile"><path d="M53 63 Q60 69.5 67 63" stroke="${P.ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>`;
+  return `<g class="char" data-expr="${expr}">
+    <g class="arm"><rect x="24" y="96" width="13" height="42" rx="6.5" fill="${P.dress}" transform="rotate(10 30 98)"/><circle cx="29" cy="139" r="6" fill="${P.skin}"/></g>
+    <path d="M31 78 Q22 122 27 154 L93 154 Q98 122 89 78 Z" fill="${P.hijab}"/>
+    <path d="M44 88 Q60 82 76 88 L90 152 Q60 158 30 152 Z" fill="${P.dress}"/>
+    <path d="M31 146 Q60 152 89 146 L90 152 Q60 158 30 152 Z" fill="${P.accent}"/>
+    <circle cx="42" cy="149.5" r="1.3" fill="${P.hijabDark}"/><circle cx="55" cy="151" r="1.3" fill="${P.hijabDark}"/><circle cx="68" cy="151" r="1.3" fill="${P.hijabDark}"/><circle cx="80" cy="149.5" r="1.3" fill="${P.hijabDark}"/>
+    <rect x="44" y="152" width="15" height="8" rx="4" fill="${P.shoe}"/>
+    <rect x="62" y="152" width="15" height="8" rx="4" fill="${P.shoe}"/>
+    <ellipse cx="60" cy="50" rx="34" ry="38" fill="${P.hijab}"/>
+    <path d="M40 33 Q60 24 80 33" stroke="${P.hijabDark}" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.75"/>
+    <circle cx="60" cy="50" r="22.5" fill="${P.skin}"/>
+    <g class="eyes">
+      <ellipse cx="52" cy="47" rx="4.4" ry="5.4" fill="#fff" stroke="${P.ink}" stroke-width="0.9"/>
+      <circle cx="52.5" cy="48" r="2.5" fill="${P.ink}"/><circle cx="51.3" cy="45.8" r="0.9" fill="#fff"/>
+      <ellipse cx="68" cy="47" rx="4.4" ry="5.4" fill="#fff" stroke="${P.ink}" stroke-width="0.9"/>
+      <circle cx="68.5" cy="48" r="2.5" fill="${P.ink}"/><circle cx="67.3" cy="45.8" r="0.9" fill="#fff"/>
+    </g>
+    ${brows}
+    <path d="M60 54 Q62.5 57 60 59" stroke="${P.skinDark}" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    ${mouths}
+    <circle cx="45" cy="58" r="3.4" fill="${P.blush}" opacity="0.5"/>
+    <circle cx="75" cy="58" r="3.4" fill="${P.blush}" opacity="0.5"/>
+    ${pointArm}
+  </g>`;
+}
+function qilaSide(){
+  return `<g class="char">
+    <path d="M28 152 Q20 112 30 82 Q26 42 54 22 Q76 8 86 34 Q90 46 84 60 L84 84 Q92 116 88 152 Z" fill="${P.hijab}"/>
+    <path d="M50 88 Q62 84 74 90 L82 152 Q58 156 40 150 Z" fill="${P.dress}"/>
+    <path d="M40 145 Q60 150 82 147 L82 152 Q58 156 40 150 Z" fill="${P.accent}"/>
+    <g class="arm"><rect x="58" y="92" width="12" height="38" rx="6" fill="${P.hijab}" transform="rotate(5 64 94)"/><circle cx="63" cy="131" r="5.5" fill="${P.skin}"/></g>
+    <rect x="46" y="152" width="15" height="8" rx="4" fill="${P.shoe}"/>
+    <rect x="61" y="152" width="15" height="8" rx="4" fill="${P.shoe}"/>
+    <circle cx="62" cy="48" r="19" fill="${P.skin}"/>
+    <circle cx="81.5" cy="52" r="3.2" fill="${P.skin}"/>
+    <path d="M46 60 Q62 74 78 58 Q78 68 62 76 Q46 70 46 60 Z" fill="${P.hijab}"/>
+    <g class="eyes">
+      <ellipse cx="70" cy="45" rx="3.8" ry="5" fill="#fff" stroke="${P.ink}" stroke-width="0.9"/>
+      <circle cx="70.5" cy="46" r="2.3" fill="${P.ink}"/><circle cx="69.4" cy="44" r="0.8" fill="#fff"/>
+    </g>
+    <path d="M64 35 Q70 32.5 76 35.5" stroke="${P.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M70 56 Q75.5 59.5 78.5 54.5" stroke="${P.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <circle cx="64" cy="54" r="3" fill="${P.blush}" opacity="0.5"/>
+  </g>`;
+}
+function ezraFront(expr){
+  const mouths = `
+    <g class="m-worried"><path d="M52 67 Q60 63 68 67" stroke="${P.mouth}" stroke-width="2.6" fill="none" stroke-linecap="round"/></g>
+    <g class="m-grin"><path d="M47 64 Q60 80 73 64 Q60 70 47 64 Z" fill="${P.mouth}"/><ellipse cx="60" cy="68.6" rx="6.5" ry="2.7" fill="${P.tongue}"/></g>
+    <g class="m-smile"><path d="M48 64 Q60 74 72 64" stroke="${P.mouth}" stroke-width="2.8" fill="none" stroke-linecap="round"/></g>`;
+  const eyesOpen = `<g class="eyes eyesOpen">
+      <ellipse cx="50" cy="50" rx="5" ry="6.2" fill="#fff" stroke="${P.ink}" stroke-width="0.9"/>
+      <circle cx="50.6" cy="51.2" r="2.9" fill="${P.ink}"/><circle cx="49.2" cy="48.6" r="1.1" fill="#fff"/>
+      <ellipse cx="70" cy="50" rx="5" ry="6.2" fill="#fff" stroke="${P.ink}" stroke-width="0.9"/>
+      <circle cx="70.6" cy="51.2" r="2.9" fill="${P.ink}"/><circle cx="69.2" cy="48.6" r="1.1" fill="#fff"/>
+    </g>`;
+  const eyesHappy = `<g class="eyes eyesHappy">
+      <path d="M44.5 50 Q50 43.5 55.5 50" stroke="${P.ink}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      <path d="M64.5 50 Q70 43.5 75.5 50" stroke="${P.ink}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    </g>`;
+  const brows = expr==='worried'
+    ? `<path d="M44 41 Q50 37 56 40" stroke="${P.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+       <path d="M64 40 Q70 37 76 41" stroke="${P.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+    : `<path d="M44 42 Q50 38.5 56 41.5" stroke="${P.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+       <path d="M64 41.5 Q70 38.5 76 42" stroke="${P.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+  return `<g class="char" data-expr="${expr}">
+    <rect x="46" y="112" width="11" height="24" rx="5" fill="${P.skin}"/>
+    <rect x="63" y="112" width="11" height="24" rx="5" fill="${P.skin}"/>
+    <rect x="42" y="132" width="18" height="10" rx="5" fill="${P.shoe}"/>
+    <rect x="61" y="132" width="18" height="10" rx="5" fill="${P.shoe}"/>
+    <rect x="40" y="104" width="40" height="18" rx="9" fill="${P.shorts}"/>
+    <g class="arm"><rect x="26" y="76" width="12" height="34" rx="6" fill="${P.shirt}" transform="rotate(12 32 78)"/><circle cx="29" cy="112" r="5.5" fill="${P.skin}"/></g>
+    <g class="arm"><rect x="82" y="76" width="12" height="34" rx="6" fill="${P.shirt}" transform="rotate(-12 88 78)"/><circle cx="91" cy="112" r="5.5" fill="${P.skin}"/></g>
+    <rect x="38" y="72" width="44" height="40" rx="16" fill="${P.shirt}"/>
+    <path d="M52 74 Q60 80 68 74" stroke="${P.shirtDark}" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="33" cy="54" r="6" fill="${P.skin}"/><circle cx="87" cy="54" r="6" fill="${P.skin}"/>
+    <circle cx="60" cy="54" r="26" fill="${P.skin}"/>
+    <path d="M34 54 C30 22 46 12 60 12 C74 12 90 22 86 54 C86 48 82 44 78 49 C77 42 71 41 69 47 C64 40 56 40 51 47 C49 41 43 42 42 49 C38 44 34 48 34 54 Z" fill="${P.hair}"/>
+    ${eyesOpen}${eyesHappy}
+    ${brows}
+    <path d="M60 57 Q62 59.5 60 61" stroke="${P.skinDark}" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <g class="dimples">
+      <circle cx="40.5" cy="62" r="2.6" fill="${P.skinDark}" opacity="0.85"/>
+      <circle cx="79.5" cy="62" r="2.6" fill="${P.skinDark}" opacity="0.85"/>
+      <path d="M37.6 59.8 A3.8 3.8 0 0 1 42.4 59.2" stroke="#FFF3E2" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0.8"/>
+      <path d="M77.6 59.8 A3.8 3.8 0 0 1 82.4 59.2" stroke="#FFF3E2" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0.8"/>
+    </g>
+    ${mouths}
+  </g>`;
+}
+/* expression switching: hide the two variants not active */
+function exprCSS(){
+  return `
+  .char .m-grin,.char .m-smile,.char .m-worried,.char .m-leader,.char .m-nag,
+  .char .b-leader,.char .b-nag,.char .eyesHappy{display:none}
+  .char[data-expr="worried"] .m-worried{display:block}
+  .char[data-expr="grin"] .m-grin{display:block}
+  .char[data-expr="grin"] .eyesOpen{display:none}
+  .char[data-expr="grin"] .eyesHappy{display:block}
+  .char[data-expr="giggle"] .m-smile{display:block}
+  .char[data-expr="giggle"] .eyesOpen{display:none}
+  .char[data-expr="giggle"] .eyesHappy{display:block}
+  .char[data-expr="leader"] .m-leader{display:block}
+  .char[data-expr="leader"] .b-leader{display:block}
+  .char[data-expr="nag"] .m-nag{display:block}
+  .char[data-expr="nag"] .b-nag{display:block}
+  .char[data-expr="smile"] .m-smile{display:block}
+  .char[data-expr="smile"] .b-leader{display:block}`;
+}
+</script>
+
+<script>
+/* inject the expression CSS */
+document.head.insertAdjacentHTML('beforeend', `<style>${exprCSS()}</style>`);
+
+/* ============ scene mount ============ */
+const scene = document.getElementById('scene');
+scene.innerHTML = `
+<defs>
+  <pattern id="batikBorder" width="46" height="30" patternUnits="userSpaceOnUse">
+    <rect width="46" height="30" fill="#C96F4A"/>
+    <path d="M0 22 Q11 8 23 22 T46 22" stroke="#F6EEDD" stroke-width="3" fill="none"/>
+    <path d="M-6 8 Q5 -4 16 8 T38 8 T60 8" stroke="#E8D9B8" stroke-width="2" fill="none" opacity="0.85"/>
+    <circle cx="23" cy="15" r="1.6" fill="#F6EEDD" opacity="0.9"/>
+  </pattern>
+  <filter id="pshadow" x="-20%" y="-20%" width="140%" height="150%">
+    <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#5C4632" flood-opacity="0.30"/>
+  </filter>
+  <filter id="grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n"/>
+    <feColorMatrix in="n" type="saturate" values="0"/>
+  </filter>
+</defs>
+
+<!-- batik frame -->
+<rect x="0" y="0" width="960" height="560" fill="url(#batikBorder)"/>
+<rect x="26" y="26" width="908" height="508" fill="#F7EFDF"/>
+<rect x="26" y="26" width="908" height="508" fill="none" stroke="#5C4632" stroke-width="3"/>
+
+<!-- wall + floor -->
+<rect x="26" y="26" width="908" height="414" fill="#F7EFDF"/>
+<rect x="26" y="440" width="908" height="94" fill="#E9D9B8"/>
+<line x1="26" y1="440" x2="934" y2="440" stroke="#C9B389" stroke-width="3"/>
+
+<!-- window (parallax layer A) -->
+<g class="layer-plx">
+  <g filter="url(#pshadow)">
+    <rect x="70" y="90" width="200" height="180" rx="8" fill="#D7E5DF"/>
+    <rect x="70" y="90" width="200" height="180" rx="8" fill="none" stroke="#B58A5A" stroke-width="10"/>
+    <!-- kampung rooftops + mosque silhouette -->
+    <g fill="#A8B69B">
+      <path d="M85 246 L85 212 L112 192 L139 212 L139 246 Z"/>
+      <path d="M150 246 L150 218 L172 202 L194 218 L194 246 Z"/>
+    </g>
+    <g fill="#7E8F7C">
+      <path d="M214 246 L214 218 Q231 196 248 218 L248 246 Z"/>
+      <rect x="252" y="196" width="10" height="50" rx="3"/>
+      <path d="M253 196 Q257 188 261 196 Z"/>
+    </g>
+    <circle cx="102" cy="128" r="13" fill="#E3B23C"/>
+    <line x1="170" y1="94" x2="170" y2="266" stroke="#B58A5A" stroke-width="7"/>
+    <line x1="74" y1="180" x2="266" y2="180" stroke="#B58A5A" stroke-width="7"/>
+  </g>
+</g>
+
+<!-- bismillah plaque -->
+<g class="layer-plx2" filter="url(#pshadow)">
+  <rect x="330" y="78" width="164" height="42" rx="10" fill="#B58A5A"/>
+  <rect x="336" y="84" width="152" height="30" rx="7" fill="#FDF6E4"/>
+  <text x="412" y="105" text-anchor="middle" font-size="17" font-weight="700" fill="#5C4632" font-family="Georgia,serif" font-style="italic">Bismillah&#8230;</text>
+</g>
+
+<!-- rug -->
+<ellipse cx="480" cy="500" rx="150" ry="26" fill="#DFC9A6" filter="url(#pshadow)"/>
+<ellipse cx="480" cy="500" rx="150" ry="26" fill="none" stroke="#C9B389" stroke-width="2" stroke-dasharray="8 6"/>
+<circle cx="440" cy="498" r="3" fill="#C96F4A" opacity="0.6"/><circle cx="500" cy="504" r="3" fill="#A8B69B" opacity="0.8"/><circle cx="530" cy="495" r="3" fill="#C96F4A" opacity="0.6"/>
+
+<!-- sofa cushions (peek spot 1) -->
+<g class="sway" filter="url(#pshadow)">
+  <rect x="300" y="420" width="104" height="38" rx="15" fill="#C96F4A"/>
+  <rect x="330" y="386" width="104" height="38" rx="15" fill="#D98E73" transform="rotate(-7 382 405)"/>
+  <rect x="306" y="452" width="104" height="36" rx="15" fill="#A8B69B"/>
+</g>
+
+<!-- toy box (open) -->
+<g filter="url(#pshadow)">
+  <path d="M562 430 L688 430 L688 452 L562 452 Z" fill="#6E5433"/>
+  <circle cx="596" cy="446" r="13" fill="#E3B23C"/>
+  <path d="M583 446 a13 13 0 0 1 26 0" fill="#C96F4A"/>
+  <rect x="618" y="426" width="20" height="20" rx="3" fill="#A8B69B"/>
+  <rect x="644" y="430" width="16" height="16" rx="3" fill="#D98E73"/>
+  <path d="M556 448 L694 448 L686 518 L564 518 Z" fill="#B58A5A"/>
+  <path d="M556 448 L694 448 L686 518 L564 518 Z" fill="none" stroke="#8A6A42" stroke-width="3"/>
+  <rect x="552" y="442" width="146" height="12" rx="6" fill="#8A6A42"/>
+</g>
+
+<!-- bed -->
+<g filter="url(#pshadow)">
+  <rect x="806" y="250" width="30" height="200" rx="12" fill="#B58A5A"/>
+  <rect x="690" y="326" width="140" height="88" rx="10" fill="#F1E3C4"/>
+  <path d="M690 352 Q725 338 760 352 T830 352 L830 414 L690 414 Z" fill="#A8B69B"/>
+  <rect x="806" y="316" width="30" height="38" fill="#D98E73"/>
+  <rect x="702" y="318" width="52" height="26" rx="12" fill="#FDF6E4" stroke="#E3D3AE" stroke-width="2"/>
+</g>
+<!-- under-bed shadow + ghost truck -->
+<g>
+  <rect x="686" y="416" width="124" height="32" rx="9" fill="#D9C49A"/>
+  <g class="ghost" transform="translate(708,404) scale(0.62)" opacity="0.85">
+    <g stroke="#8A6A42" stroke-width="3.5" stroke-dasharray="7 5" fill="none">
+      <rect x="0" y="12" width="26" height="26" rx="5"/>
+      <path d="M30 8 L86 8 L82 38 L30 38 Z"/>
+    </g>
+    <circle cx="14" cy="44" r="7" stroke="#8A6A42" stroke-width="3.5" stroke-dasharray="5 4" fill="none"/>
+    <circle cx="70" cy="44" r="7" stroke="#8A6A42" stroke-width="3.5" stroke-dasharray="5 4" fill="none"/>
+  </g>
+</g>
+
+<!-- floating ghost truck + question (parallax layer B) -->
+<g class="layer-plx2">
+  <g transform="translate(520,268)">
+    <g stroke="#B58A5A" stroke-width="3" stroke-dasharray="8 6" fill="none" opacity="0.85">
+      <rect x="0" y="14" width="30" height="30" rx="6"/>
+      <path d="M34 10 L96 10 L92 44 L34 44 Z"/>
+      <circle cx="16" cy="50" r="8"/><circle cx="76" cy="50" r="8"/>
+    </g>
+    <circle cx="112" cy="6" r="16" fill="#E3B23C" stroke="#5C4632" stroke-width="2.5"/>
+    <text x="112" y="13" text-anchor="middle" font-size="20" font-weight="800" fill="#5C4632" font-family="system-ui,sans-serif">?</text>
+  </g>
+</g>
+
+<!-- actors -->
+<g id="actor-qila" class="actor">
+  <g class="charSlot" transform="translate(148,345) scale(1.08)">
+    <g class="react"></g>
+  </g>
+  <g class="bubble" transform="translate(148,345)">
+    <rect class="bubble-bg" x="0" y="-48" width="120" height="34" rx="16" fill="#FFF9EC" stroke="#5C4632" stroke-width="2"/>
+    <path class="bubble-bg" d="M50 -15 L60 2 L70 -15 Z" fill="#FFF9EC" stroke="#5C4632" stroke-width="2"/>
+    <text class="bubble-text" x="60" y="-26" text-anchor="middle"></text>
+  </g>
+</g>
+<g id="actor-ezra" class="actor">
+  <g class="charSlot ez" transform="translate(424,360) scale(1.1)">
+    <g class="react"></g>
+  </g>
+  <g class="bubble" transform="translate(424,360) scale(1.1)">
+    <rect class="bubble-bg" x="0" y="-48" width="120" height="34" rx="16" fill="#FFF9EC" stroke="#5C4632" stroke-width="2"/>
+    <path class="bubble-bg" d="M50 -15 L60 2 L70 -15 Z" fill="#FFF9EC" stroke="#5C4632" stroke-width="2"/>
+    <text class="bubble-text" x="60" y="-26" text-anchor="middle"></text>
+  </g>
+</g>
+
+<!-- grain overlay -->
+<rect x="26" y="26" width="908" height="508" filter="url(#grain)" opacity="0.05" style="pointer-events:none"/>
+`;
+
+/* mount characters into slots (wobble > char nesting) */
+document.querySelector('#actor-qila .charSlot .react').innerHTML =
+  `<g class="wobble">${qilaFront('leader','point')}</g>`;
+document.querySelector('#actor-ezra .charSlot .react').innerHTML =
+  `<g class="wobble ez">${ezraFront('worried')}</g>`;
+
+/* character sheet strip */
+document.getElementById('qila-front').innerHTML =
+  `<svg viewBox="14 4 112 162" aria-label="Qila depan">${qilaFront('leader','point')}</svg>`;
+document.getElementById('qila-side').innerHTML =
+  `<svg viewBox="14 8 84 156" aria-label="Qila samping">${qilaSide()}</svg>`;
+document.getElementById('qila-chip').innerHTML =
+  `<svg viewBox="30 22 60 50" aria-label="Qila cerewet">${qilaFront('nag','point')}</svg>`;
+document.getElementById('ezra-front').innerHTML =
+  `<svg viewBox="20 8 80 138" aria-label="Ezra depan">${ezraFront('grin')}</svg>`;
+document.getElementById('ezra-side').innerHTML =
+  `<svg viewBox="20 8 80 138" aria-label="Ezra samping">${ezraSide()}</svg>`;
+document.getElementById('ezra-chip').innerHTML =
+  `<svg viewBox="30 22 60 58" aria-label="Ezra senyum lesung pipit">${ezraFront('grin')}</svg>`;
+
+/* ezra side view (local builder, same geometry language) */
+function ezraSide(){
+  return `<g class="char">
+    <rect x="52" y="112" width="11" height="24" rx="5" fill="${P.skin}"/>
+    <rect x="64" y="112" width="11" height="24" rx="5" fill="${P.skin}"/>
+    <rect x="49" y="132" width="18" height="10" rx="5" fill="${P.shoe}"/>
+    <rect x="63" y="132" width="18" height="10" rx="5" fill="${P.shoe}"/>
+    <rect x="48" y="104" width="34" height="18" rx="9" fill="${P.shorts}"/>
+    <g class="arm"><rect x="42" y="76" width="12" height="34" rx="6" fill="${P.shirt}" transform="rotate(8 48 78)"/><circle cx="46" cy="112" r="5.5" fill="${P.skin}"/></g>
+    <rect x="44" y="72" width="38" height="40" rx="16" fill="${P.shirt}"/>
+    <circle cx="60" cy="54" r="24" fill="${P.skin}"/>
+    <circle cx="89" cy="57" r="3.4" fill="${P.skin}"/>
+    <g class="eyes">
+      <ellipse cx="74" cy="48" rx="4.4" ry="5.6" fill="#fff" stroke="${P.ink}" stroke-width="0.9"/>
+      <circle cx="74.6" cy="49" r="2.6" fill="${P.ink}"/><circle cx="73.4" cy="46.6" r="1" fill="#fff"/>
+    </g>
+    <path d="M68 40 Q75 36.5 82 40" stroke="${P.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M76 66 Q81 70 84 64" stroke="${P.mouth}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <circle cx="80" cy="61" r="2.4" fill="${P.skinDark}" opacity="0.85"/>
+    <path d="M38 56 C34 24 48 12 62 12 C78 12 90 24 88 52 C84 44 76 42 72 48 C68 42 58 42 54 48 C50 44 42 46 38 56 Z" fill="${P.hair}"/>
+  </g>`;
+}
+</script>
+
+<script>
+/* ============ interactions ============ */
+const QILA_REACTS = [
+  {t:'Yuk cari di sini!', a:'react-point', e:'leader'},
+  {t:'Taruh mainan di tempatnya, ya!', a:'react-nag', e:'nag'},
+  {t:'Jangan sedih, Ez. Kakak ada.', a:'react-hug', e:'smile'}
+];
+const EZRA_REACTS = [
+  {t:'hihi!', a:'react-giggle', e:'grin'},
+  {t:'Hihi, kakak pinter deh!', a:'react-jump', e:'grin'},
+  {t:'Truknya ikut sembunyi-sembunyi, hihi!', a:'react-giggle', e:'giggle'}
+];
+
+/* ---- tiny WebAudio kit (synthesized, no assets) ---- */
+let AC=null;
+function ac(){ AC = AC || new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); return AC; }
+function pluck(freq, dur=0.5, vol=0.1){
+  try{
+    const a=ac(), t=a.currentTime, o=a.createOscillator(), g=a.createGain();
+    o.type='triangle'; o.frequency.value=freq;
+    g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t+dur);
+  }catch(e){}
+}
+function blip(){
+  try{
+    const a=ac(), t=a.currentTime, o=a.createOscillator(), g=a.createGain();
+    o.type='sine'; o.frequency.setValueAtTime(660,t); o.frequency.exponentialRampToValueAtTime(920,t+0.09);
+    g.gain.setValueAtTime(0.09,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.14);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t+0.16);
+  }catch(e){}
+}
+function whoosh(){
+  try{
+    const a=ac(), t=a.currentTime, len=Math.floor(a.sampleRate*0.3);
+    const buf=a.createBuffer(1,len,a.sampleRate), d=buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,1.5);
+    const src=a.createBufferSource(); src.buffer=buf;
+    const bp=a.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=0.9;
+    bp.frequency.setValueAtTime(420,t); bp.frequency.exponentialRampToValueAtTime(1500,t+0.26);
+    const g=a.createGain(); g.gain.setValueAtTime(0.22,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.3);
+    src.connect(bp).connect(g).connect(a.destination); src.start(t);
+  }catch(e){}
+}
+
+/* ---- tap reactions ---- */
+const timers={};
+function react(actorSel, list, slotSel){
+  const actor=document.querySelector(actorSel);
+  const slot=actor.querySelector(slotSel+' .react');
+  const reactG=slot;
+  const bubble=actor.querySelector('.bubble');
+  const textEl=bubble.querySelector('.bubble-text');
+  const bg=bubble.querySelectorAll('.bubble-bg');
+  const char=slot.querySelector('.char');
+  const r=list[Math.floor(Math.random()*list.length)];
+  char.setAttribute('data-expr', r.e);
+  reactG.classList.remove('react-point','react-nag','react-hug','react-giggle','react-jump');
+  void reactG.getBoundingClientRect();
+  reactG.classList.add(r.a);
+  clearTimeout(timers[actorSel]);
+  timers[actorSel]=setTimeout(()=>{
+    char.setAttribute('data-expr', actorSel.includes('qila')?'leader':'worried');
+  },1700);
+  textEl.textContent=r.t;
+  const bb=textEl.getBBox();
+  const w=Math.max(84, bb.width+26);
+  bg[0].setAttribute('x', 60-w/2); bg[0].setAttribute('width', w);
+  bubble.classList.remove('show'); void bubble.getBoundingClientRect();
+  bubble.classList.add('show');
+  clearTimeout(timers[actorSel+'b']);
+  timers[actorSel+'b']=setTimeout(()=>bubble.classList.remove('show'),1800);
+  blip(); setTimeout(()=>pluck(523+Math.random()*160,0.4,0.07),120);
+}
+document.getElementById('actor-qila').addEventListener('click', ev=>{ ev.stopPropagation(); react('#actor-qila',QILA_REACTS,'#actor-qila .charSlot'); });
+document.getElementById('actor-ezra').addEventListener('click', ev=>{ ev.stopPropagation(); react('#actor-ezra',EZRA_REACTS,'#actor-ezra .charSlot'); });
+
+/* ---- pointer parallax ---- */
+const stage=document.getElementById('stage');
+let raf=null;
+stage.addEventListener('pointermove',e=>{
+  if(raf) return;
+  raf=requestAnimationFrame(()=>{
+    const r=stage.getBoundingClientRect();
+    const px=((e.clientX-r.left)/r.width*2-1).toFixed(3);
+    const py=((e.clientY-r.top)/r.height*2-1).toFixed(3);
+    stage.style.setProperty('--px',px); stage.style.setProperty('--py',py);
+    raf=null;
+  });
+});
+stage.addEventListener('pointerleave',()=>{ stage.style.setProperty('--px',0); stage.style.setProperty('--py',0); });
+
+/* ---- flipbook ---- */
+function pageArt(n){
+  if(n===0) return `
+    <svg viewBox="0 0 560 336">
+      <rect width="560" height="336" fill="#F7EFDF"/>
+      <rect y="262" width="560" height="74" fill="#E9D9B8"/>
+      <g transform="translate(210,120) scale(1.05)">${ezraFront('worried')}</g>
+      <g transform="translate(330,150) scale(0.8)" opacity="0.9">
+        <g stroke="#B58A5A" stroke-width="4" stroke-dasharray="9 7" fill="none">
+          <rect x="0" y="16" width="34" height="34" rx="7"/><path d="M38 12 L108 12 L104 50 L38 50 Z"/>
+          <circle cx="18" cy="56" r="9"/><circle cx="84" cy="56" r="9"/>
+        </g>
+        <circle cx="126" cy="8" r="17" fill="#E3B23C" stroke="#5C4632" stroke-width="3"/>
+        <text x="126" y="15" text-anchor="middle" font-size="22" font-weight="800" fill="#5C4632">?</text>
+      </g>
+      <text x="60" y="52" font-size="26" font-weight="800" fill="#5C4632" font-family="Georgia,serif">Bismillah&#8230; truk Ezra mana ya?</text>
+      <text x="60" y="76" font-size="14" fill="#8A7458" font-family="system-ui,sans-serif">Oh no, the truck is missing!</text>
+    </svg>`;
+  if(n===1) return `
+    <svg viewBox="0 0 560 336">
+      <rect width="560" height="336" fill="#F7EFDF"/>
+      <rect y="262" width="560" height="74" fill="#E9D9B8"/>
+      <g transform="translate(96,96) scale(1.05)">${qilaFront('leader','point')}</g>
+      <g transform="translate(300,88) rotate(-4)">
+        <rect x="0" y="0" width="180" height="150" rx="10" fill="#FDF6E4" stroke="#B58A5A" stroke-width="4"/>
+        <path d="M24 120 Q60 60 96 96 T156 40" stroke="#C96F4A" stroke-width="4" fill="none" stroke-dasharray="9 7"/>
+        <path d="M148 28 L166 46 M166 28 L148 46" stroke="#5C4632" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="24" cy="120" r="7" fill="#E3B23C" stroke="#5C4632" stroke-width="2.5"/>
+        <rect x="70" y="28" width="42" height="26" rx="5" fill="none" stroke="#B58A5A" stroke-width="3" stroke-dasharray="6 5"/>
+        <text x="91" y="70" text-anchor="middle" font-size="15" font-weight="800" fill="#5C4632" font-family="system-ui,sans-serif">PETA MAINAN</text>
+      </g>
+      <text x="60" y="300" font-size="20" font-weight="800" fill="#5C4632" font-family="Georgia,serif">"Yuk! Buat peta mainan, cari bersama!"</text>
+    </svg>`;
+  return `
+    <svg viewBox="0 0 560 336">
+      <rect width="560" height="336" fill="#F7EFDF"/>
+      <rect y="262" width="560" height="74" fill="#E9D9B8"/>
+      <g transform="translate(230,110) scale(1.1)">${ezraFront('grin')}</g>
+      <g transform="translate(360,170) scale(0.9)">
+        <rect x="0" y="16" width="34" height="34" rx="7" fill="#C96F4A"/>
+        <path d="M38 12 L108 12 L104 50 L38 50 Z" fill="#D98E73"/>
+        <circle cx="18" cy="56" r="9" fill="#5C4632"/><circle cx="84" cy="56" r="9" fill="#5C4632"/>
+        <circle cx="18" cy="56" r="3.5" fill="#E8D9B8"/><circle cx="84" cy="56" r="3.5" fill="#E8D9B8"/>
+      </g>
+      <g stroke="#E3B23C" stroke-width="3.5" stroke-linecap="round">
+        <path d="M210 96 L200 84 M222 92 L220 78 M234 96 L244 86"/>
+      </g>
+      <text x="60" y="300" font-size="20" font-weight="800" fill="#5C4632" font-family="Georgia,serif">Alhamdulillah, ketemu! "hihi!"</text>
+    </svg>`;
+}
+const book=document.getElementById('book');
+const NPAGES=3;
+let cur=0, flipping=false;
+function buildBook(){
+  let html='';
+  for(let i=0;i<NPAGES;i++){
+    html+=`<div class="page ${i===0?'top':i===1?'mid':'under'}" data-i="${i}">
+      <div class="face">${pageArt(i)}<span class="pagenum">${i+1} / ${NPAGES}</span></div>
+      <div class="face back"><span>Belakang halaman · page back</span></div>
+    </div>`;
+  }
+  book.innerHTML=html;
+}
+buildBook();
+function pageEls(){ return [...book.querySelectorAll('.page')]; }
+function showPage(i){
+  pageEls().forEach((p,idx)=>{
+    p.classList.remove('turn','hidden','top','mid','under');
+    if(idx<i){ p.classList.add('hidden'); }
+    else if(idx===i){ p.classList.add('top'); }
+    else if(idx===i+1){ p.classList.add('mid'); }
+    else { p.classList.add('under'); }
+  });
+  document.getElementById('prevBtn').style.visibility = i===0 ? 'hidden' : 'visible';
+  document.getElementById('nextBtn').innerHTML = i===NPAGES-1 ? '&#8635;' : '&#8250;';
+}
+function next(){
+  if(flipping) return;
+  const els=pageEls();
+  if(cur===NPAGES-1){ cur=0; showPage(0); whoosh(); return; }
+  flipping=true;
+  const p=els[cur];
+  p.classList.add('turn');
+  whoosh();
+  setTimeout(()=>{ p.classList.add('hidden'); cur++; showPage(cur); flipping=false; },760);
+}
+function prev(){
+  if(flipping||cur===0) return;
+  cur--; showPage(cur);
+  const p=pageEls()[cur];
+  flipping=true; whoosh();
+  requestAnimationFrame(()=>{ p.classList.remove('hidden','turn'); });
+  setTimeout(()=>{ showPage(cur); flipping=false; },760);
+}
+showPage(0);
+document.getElementById('nextBtn').addEventListener('click',next);
+document.getElementById('prevBtn').addEventListener('click',prev);
+</script>
+</body>
+</html>

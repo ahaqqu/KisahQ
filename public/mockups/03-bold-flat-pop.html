@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03 — Pop Flat Berani · KisahQ Mockup</title>
+<style>
+  :root{
+    --cream:#FFF3E2; --ink:#262238; --coral:#FF5D5D; --teal:#19B3A6;
+    --sun:#FFC53D; --magenta:#E84A8A; --sky:#C8EBE4;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:#FFE8C7; color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    line-height:1.5; font-weight:600;
+  }
+  .wrap{ max-width:1120px; margin:0 auto; padding:20px 18px 60px; }
+  header.top{
+    display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+    padding:14px 6px 10px; border-bottom:4px solid var(--ink); margin-bottom:18px;
+  }
+  header.top a{ color:var(--coral); font-weight:800; text-decoration:none; font-size:15px; }
+  h1{ font-size:27px; margin:0; font-weight:900; letter-spacing:.3px; text-transform:uppercase; }
+  .sub{ font-size:14px; color:#7C6E58; margin:0; }
+  .pager{ margin-left:auto; display:flex; gap:10px; }
+  .pager a{
+    display:inline-block; padding:8px 14px; border-radius:12px; font-size:13px; font-weight:800;
+    background:var(--sun); border:3px solid var(--ink); color:var(--ink); text-decoration:none;
+    box-shadow:4px 4px 0 var(--ink);
+  }
+  .tagline{ padding:4px 6px 0; font-size:15px; }
+  .tagline .en{ color:#7C6E58; font-size:13px; font-weight:500; }
+
+  .board{ display:grid; grid-template-columns:minmax(0,1fr) 270px; gap:18px; align-items:start; }
+  @media (max-width:900px){ .board{ grid-template-columns:1fr; } }
+  .stage-frame{
+    background:var(--cream); border:4px solid var(--ink); border-radius:18px;
+    box-shadow:10px 10px 0 var(--teal); padding:8px; position:relative;
+  }
+  .stage svg{ display:block; width:100%; height:auto; }
+  .hint{
+    position:absolute; top:12px; left:50%; transform:translateX(-50%);
+    background:var(--coral); color:#fff; border:3px solid var(--ink);
+    border-radius:999px; padding:6px 16px; font-weight:800; font-size:13px;
+    box-shadow:4px 4px 0 var(--ink); pointer-events:none;
+  }
+  .sheet{ display:flex; flex-direction:column; gap:14px; }
+  .sheet h2{ font-size:15px; margin:0 0 4px; text-transform:uppercase; letter-spacing:1px; color:var(--magenta); font-weight:900; }
+  .sheetcard{
+    background:#fff; border:4px solid var(--ink); border-radius:16px; padding:10px 12px;
+    box-shadow:7px 7px 0 var(--sun);
+  }
+  .sheetcard svg{ width:100%; height:auto; display:block; }
+  .sheetrow{ display:flex; gap:8px; }
+  .sheetrow .cell{ flex:1; text-align:center; }
+  .cell small{ display:block; font-size:11px; color:#7C6E58; margin-top:3px; font-weight:700; }
+  .dimple-note{ font-size:12.5px; background:var(--sky); border:3px solid var(--ink); border-radius:14px; padding:8px 10px; }
+
+  .flip-section{ margin-top:26px; }
+  .flip-section h2{ font-size:17px; color:var(--magenta); letter-spacing:.5px; margin:0 0 4px; font-weight:900; text-transform:uppercase; }
+  .flip-desc{ font-size:13px; color:#7C6E58; margin:0 0 12px; font-weight:500; }
+  .book-row{ display:flex; align-items:center; justify-content:center; gap:16px; }
+  .book{ width:min(560px,86vw); aspect-ratio:5/3; position:relative; perspective:1300px; }
+  .page{
+    position:absolute; inset:0; transform-origin:left center; transform-style:preserve-3d;
+    transition:transform .6s cubic-bezier(.4,.1,.3,1), opacity .6s; border-radius:14px;
+  }
+  .page .face{
+    position:absolute; inset:0; border-radius:14px; overflow:hidden;
+    backface-visibility:hidden; border:4px solid var(--ink); background:var(--cream);
+    box-shadow:8px 8px 0 rgba(38,34,56,.9);
+  }
+  .page .face svg{ width:100%; height:100%; display:block; }
+  .page .back{
+    transform:rotateY(180deg);
+    background:repeating-linear-gradient(-45deg,var(--sun) 0 14px,var(--cream) 14px 28px);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .page .back span{
+    background:#fff; border:3px solid var(--ink); border-radius:999px;
+    padding:8px 18px; font-weight:800; font-size:13px; color:var(--ink); box-shadow:4px 4px 0 var(--ink);
+  }
+  .page.turn{ transform:rotateY(-168deg); opacity:.4; }
+  .page.under{ z-index:1; } .page.top{ z-index:3; } .page.mid{ z-index:2; }
+  .page.hidden{ display:none; }
+  .pagenum{ position:absolute; bottom:8px; right:12px; font-size:12px; font-weight:900; color:#7C6E58; }
+  .navbtn{
+    width:76px; height:76px; border-radius:50%; border:4px solid var(--ink);
+    background:var(--sun); color:var(--ink); font-size:28px; font-weight:900;
+    cursor:pointer; box-shadow:6px 6px 0 var(--ink); touch-action:manipulation;
+  }
+  .navbtn:active{ transform:translate(3px,3px); box-shadow:3px 3px 0 var(--ink); }
+
+  footer.notes{
+    margin-top:30px; border-top:4px solid var(--ink); padding-top:14px;
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;
+  }
+  footer.notes h3{ font-size:13px; text-transform:uppercase; letter-spacing:1px; margin:0 0 8px; color:var(--magenta); font-weight:900; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ display:flex; align-items:center; gap:6px; font-size:12px; background:#fff; border:2.5px solid var(--ink); border-radius:10px; padding:4px 8px; font-weight:800; box-shadow:3px 3px 0 rgba(38,34,56,.25); }
+  .chip i{ width:18px; height:18px; border-radius:5px; border:2px solid var(--ink); display:inline-block; }
+  .notes p, .notes ul{ font-size:13px; margin:0; font-weight:500; }
+  .notes ul{ padding-left:18px; }
+  .notes .en{ color:#7C6E58; display:block; font-size:12px; font-weight:500; }
+  .moat{ background:#fff; border:4px solid var(--coral); border-radius:16px; padding:10px 12px; box-shadow:7px 7px 0 var(--sun); }
+
+  /* ---------- SVG idle ---------- */
+  .bob{ transform-box:fill-box; transform-origin:50% 100%; animation:bob 1.7s ease-in-out infinite; }
+  .bob.ez{ animation-delay:.35s; }
+  @keyframes bob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-4px);} }
+  .char{ transform-box:fill-box; transform-origin:50% 100%; }
+  .eyes{ transform-box:fill-box; transform-origin:50% 50%; animation:blink 3.4s infinite; }
+  @keyframes blink{ 0%,90%,100%{ transform:scaleY(1);} 93.5%{ transform:scaleY(.1);} 97%{ transform:scaleY(1);} }
+  .locks{ transform-box:fill-box; transform-origin:50% 8%; animation:sway 2.6s ease-in-out infinite; }
+  @keyframes sway{ 0%,100%{ transform:rotate(-1.6deg);} 50%{ transform:rotate(1.6deg);} }
+  .layer-plx{ transform:translate(calc(var(--px,0)*8px),calc(var(--py,0)*5px)); }
+  .layer-plx2{ transform:translate(calc(var(--px,0)*4px),calc(var(--py,0)*2px)); }
+
+  /* snappy squash & stretch */
+  .react{ transform-box:fill-box; transform-origin:50% 100%; }
+  .react.react-pop{ animation:rpop .5s cubic-bezier(.3,1.4,.5,1); }
+  @keyframes rpop{ 0%{transform:scale(1,1);} 30%{transform:scale(1.18,.8);} 55%{transform:scale(.86,1.14);} 78%{transform:scale(1.06,.94);} 100%{transform:scale(1,1);} }
+  .react.react-spin{ animation:rspin .62s ease-in-out; }
+  @keyframes rspin{ 0%{transform:rotate(0) scale(1,1);} 30%{transform:rotate(130deg) scale(1.12,.88);} 65%{transform:rotate(310deg) scale(.9,1.1);} 100%{transform:rotate(360deg) scale(1,1);} }
+  .react.react-jump{ animation:rjump .5s cubic-bezier(.3,.7,.4,1); }
+  @keyframes rjump{ 0%,100%{transform:translateY(0) scale(1,1);} 30%{transform:translateY(2px) scale(1.14,.84);} 55%{transform:translateY(-22px) scale(.94,1.08);} 80%{transform:translateY(0) scale(1.08,.92);} }
+  .react.react-nod{ animation:rnod .55s ease; }
+  @keyframes rnod{ 0%,100%{transform:rotate(0);} 35%{transform:rotate(-4deg) scale(1.05,.96);} 70%{transform:rotate(2deg);} }
+  .react.react-stern{ animation:rstern .6s ease; }
+  @keyframes rstern{ 0%,100%{transform:translateX(0) scale(1,1);} 25%{transform:translateX(-4px) scale(1.06,.95);} 55%{transform:translateX(4px) scale(1.06,.95);} 80%{transform:translateX(-2px);} }
+
+  .bubble{ opacity:0; transition:opacity .12s; pointer-events:none; }
+  .bubble.show{ opacity:1; }
+  .bubble text{ font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; font-weight:800; font-size:13px; fill:var(--ink); }
+  .qmark{ font-family:system-ui,sans-serif; font-weight:900; font-size:20px; fill:var(--ink); }
+  @media (prefers-reduced-motion:reduce){ *{ animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a href="index.html">&larr; Galeri Mockup</a>
+    <h1>03 · Pop Flat Berani</h1>
+    <span class="sub">Bold Flat Pop Vector</span>
+    <nav class="pager"><a href="02-soft-pastel-storybook.html">&larr; 02</a><a href="04-wayang-shadow-play.html">04 &rarr;</a></nav>
+  </header>
+  <p class="tagline">Vektor flat modern: outline tebal, palet jenuh, mata besar ekspresif, reaksi ketuk squash-and-stretch yang ngebut. Konsep ini <b>mengeksplorasi Qila tanpa hijab</b> (rambut terbang) — empat konsep lain memakai hijab.
+    <span class="en">Modern flat vector: thick outlines, saturated palette, big expressive eyes, snappy squash-and-stretch. This concept explores Qila without hijab (flowing hair) — the other four keep her hijab.</span></p>
+
+  <div class="board">
+    <div class="stage-frame" id="stage">
+      <span class="hint">Ketuk Qila &amp; Ezra! · Tap the characters</span>
+      <svg id="scene" viewBox="0 0 960 560" role="img" aria-label="Kamar Ezra gaya pop flat"></svg>
+    </div>
+
+    <aside class="sheet">
+      <div class="sheetcard">
+        <h2>Lembar Karakter · Qila</h2>
+        <div class="sheetrow">
+          <div class="cell"><div id="qila-front"></div><small>depan · front</small></div>
+          <div class="cell"><div id="qila-side"></div><small>samping · side</small></div>
+          <div class="cell"><div id="qila-chip"></div><small>cerewet · nag</small></div>
+        </div>
+      </div>
+      <div class="sheetcard">
+        <h2>Lembar Karakter · Ezra</h2>
+        <div class="sheetrow">
+          <div class="cell"><div id="ezra-front"></div><small>depan · front</small></div>
+          <div class="cell"><div id="ezra-side"></div><small>samping · side</small></div>
+          <div class="cell"><div id="ezra-chip"></div><small>senyum lesung pipit · dimple grin</small></div>
+        </div>
+      </div>
+      <div class="sheetcard dimple-note">
+        <b>Lesung pipit Ezra</b> dibuat tebal &amp; jelas — dua titik plum ber-outline, terlihat bahkan dari jauh.
+        <span class="en">Ezra's dimples are bold and outlined — visible even from afar.</span>
+        <br><br><b>Catatan:</b> hanya di konsep ini Qila tampil tanpa hijab untuk perbandingan; kanon akhir ditentukan pemilik.
+        <span class="en">Note: only this concept shows Qila without hijab for comparison; the owner decides the canon.</span>
+      </div>
+    </aside>
+  </div>
+
+  <section class="flip-section">
+    <h2>Demo Flip Halaman · 3 Lembar</h2>
+    <p class="flip-desc">Transisi halaman cepat gaya kartun (klik panah). <span class="en">Snappy cartoon page-turn — tap the arrow.</span></p>
+    <div class="book-row">
+      <button class="navbtn" id="prevBtn" aria-label="Halaman sebelumnya">&lsaquo;</button>
+      <div class="book" id="book"></div>
+      <button class="navbtn" id="nextBtn" aria-label="Halaman berikutnya">&rsaquo;</button>
+    </div>
+  </section>
+
+  <footer class="notes">
+    <div>
+      <h3>Palet · Palette</h3>
+      <div class="chips">
+        <span class="chip"><i style="background:#FFF3E2"></i>Krem</span>
+        <span class="chip"><i style="background:#FF5D5D"></i>Coral</span>
+        <span class="chip"><i style="background:#19B3A6"></i>Teal</span>
+        <span class="chip"><i style="background:#FFC53D"></i>Kuning matahari</span>
+        <span class="chip"><i style="background:#E84A8A"></i>Magenta</span>
+        <span class="chip"><i style="background:#262238"></i>Tinta (outline)</span>
+      </div>
+    </div>
+    <div>
+      <h3>Garis &amp; Motif · Line &amp; Motif</h3>
+      <p>Outline tinta tebal (3,5–4 px) di semua bentuk; tanpa gradasi; bayangan offset keras; konfeti bintang-titik sebagai motif; bidang warna jenuh.
+      <span class="en">Thick 3.5–4 px ink outlines on every shape; no gradients; hard offset shadows; star-dot confetti motif; saturated flat fills.</span></p>
+    </div>
+    <div>
+      <h3>Inventaris Animasi · Animation Inventory</h3>
+      <ul>
+        <li>Idle: bob energik, kedip cepat, rambut Qila berayun <span class="en">energetic bob, quick blink, hair sway</span></li>
+        <li>Ketuk: squash-and-stretch, spin 360&deg;, lompat — reaksi tercepat dari 5 konsep <span class="en">squash-and-stretch, 360&deg; spin, jump — snappiest of the five</span></li>
+        <li>Flip halaman cepat + whoosh WebAudio <span class="en">fast page-turn + synthesized whoosh</span></li>
+        <li>Parallax pointer: jendela &amp; prop <span class="en">pointer parallax</span></li>
+      </ul>
+    </div>
+    <div class="moat">
+      <h3>Moat</h3>
+      <p><b>Mainan yang responsif:</b> riset menunjukkan animasi pemicu-anak mengalahkan animasi dekoratif — gaya paling "juicy" untuk tap reactions, dengan identitas Nusantara tetap di properti (masjid, batik-dot).
+      <span class="en">Child-responsive play: research says child-triggered beats decorative animation — the juiciest style for tap reactions, with Nusantara identity kept in the props.</span></p>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* ============ palette (pop remap, thick ink strokes) ============ */
+const P = {
+  skin:'#E8A66C', skinDark:'#B96A3C', hijab:'', hijabDark:'',
+  dress:'#FF5D5D', accent:'#FFC53D', blush:'#FF8B7E', ink:'#262238',
+  mouth:'#7C2B3E', tongue:'#FF8B7E', shoe:'#262238',
+  hair:'#1F1A2E', shirt:'#19B3A6', shirtDark:'#0E8C82', shorts:'#FFC53D'
+};
+const OW = 3.5;
+const S = `stroke="${P.ink}" stroke-width="${OW}" stroke-linejoin="round"`;
+const S2 = `stroke="${P.ink}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"`;
+
+/* ============ Qila WITHOUT hijab: flowing hair + star clip (this concept only) ============ */
+function qilaFront(expr, pose){
+  const pointArm = pose==='point'
+    ? `<g class="arm"><rect x="72" y="90" width="40" height="12" rx="6" fill="${P.dress}" ${S} transform="rotate(-14 74 96)"/><circle cx="111" cy="85" r="6" fill="${P.skin}" ${S}/><rect x="111" y="82.6" width="10" height="4.8" rx="2.4" fill="${P.skin}" transform="rotate(-14 111 85)"/></g>`
+    : `<g class="arm"><rect x="80" y="96" width="13" height="42" rx="6.5" fill="${P.dress}" ${S} transform="rotate(-9 86 98)"/><circle cx="88" cy="139" r="6" fill="${P.skin}" ${S}/></g>`;
+  const brows = `
+    <g class="b-leader">
+      <path d="M46 37 Q52 33 58 36.5" ${S2} fill="none"/>
+      <path d="M64 36 Q70 34 76 38.5" ${S2} fill="none"/>
+    </g>
+    <g class="b-nag">
+      <path d="M45 33 Q52 29.5 58 33" ${S2} fill="none"/>
+      <path d="M64 34 Q70 30.5 76 34" ${S2} fill="none"/>
+    </g>`;
+  const mouths = `
+    <g class="m-leader"><path d="M53 62.5 Q60 70 67 62.5" ${S2} fill="none"/></g>
+    <g class="m-nag"><rect x="54.5" y="61" width="11" height="8" rx="3.5" fill="${P.mouth}" ${S}/></g>
+    <g class="m-smile"><path d="M53 63 Q60 69.5 67 63" ${S2} fill="none"/></g>`;
+  return `<g class="char" data-expr="${expr}">
+    <g class="locks">
+      <path d="M32 46 Q20 64 24 92 Q26 106 36 110 Q32 94 34 78 Q35 62 37 50 Z" fill="${P.hair}" ${S}/>
+      <path d="M88 46 Q100 64 96 92 Q94 106 84 110 Q88 94 86 78 Q85 62 83 50 Z" fill="${P.hair}" ${S}/>
+    </g>
+    <g class="arm"><rect x="24" y="96" width="13" height="42" rx="6.5" fill="${P.dress}" ${S} transform="rotate(10 30 98)"/><circle cx="29" cy="139" r="6" fill="${P.skin}" ${S}/></g>
+    <path d="M31 78 Q60 66 89 78 L90 152 Q60 158 30 152 Z" fill="${P.dress}" ${S}/>
+    <path d="M31 146 Q60 152 89 146 L90 152 Q60 158 30 152 Z" fill="${P.accent}" ${S}/>
+    <rect x="44" y="152" width="15" height="8" rx="4" fill="${P.shoe}" ${S}/>
+    <rect x="62" y="152" width="15" height="8" rx="4" fill="${P.shoe}" ${S}/>
+    <path d="M33 56 C28 20 44 8 60 8 C76 8 92 20 87 56 C87 49 83 45 79 50 C78 43 72 42 70 48 C65 41 55 41 50 48 C48 42 42 43 41 50 C37 45 33 49 33 56 Z" fill="${P.hair}" ${S}/>
+    <path d="M77 20 l3 6 6.6 .6 -5 4.4 1.6 6.4 -6.2 -3.4 -6.2 3.4 1.6 -6.4 -5 -4.4 6.6 -.6 Z" fill="${P.accent}" stroke="${P.ink}" stroke-width="1.8"/>
+    <circle cx="60" cy="50" r="22.5" fill="${P.skin}" ${S}/>
+    <g class="eyes">
+      <ellipse cx="52" cy="47" rx="4.8" ry="5.8" fill="#fff" stroke="${P.ink}" stroke-width="1.3"/>
+      <circle cx="52.5" cy="48.2" r="2.8" fill="${P.ink}"/><circle cx="51.2" cy="45.6" r="1.1" fill="#fff"/>
+      <ellipse cx="68" cy="47" rx="4.8" ry="5.8" fill="#fff" stroke="${P.ink}" stroke-width="1.3"/>
+      <circle cx="68.5" cy="48.2" r="2.8" fill="${P.ink}"/><circle cx="67.2" cy="45.6" r="1.1" fill="#fff"/>
+    </g>
+    ${brows}
+    <path d="M60 54 Q62.5 57 60 59" ${S2} fill="none"/>
+    ${mouths}
+    <circle cx="45" cy="58" r="3.4" fill="${P.blush}"/>
+    <circle cx="75" cy="58" r="3.4" fill="${P.blush}"/>
+    ${pointArm}
+  </g>`;
+}
+function qilaSide(){
+  return `<g class="char">
+    <path d="M46 40 Q32 62 36 94 Q38 108 48 112 Q44 94 46 76 Q48 58 52 48 Z" fill="${P.hair}" ${S}/>
+    <path d="M28 152 Q22 112 30 84 Q30 46 56 26 Q78 14 88 40 Q92 54 86 62 L84 84 Q92 116 88 152 Z" fill="${P.dress}" ${S}/>
+    <path d="M40 145 Q60 150 82 147 L82 152 Q58 156 40 150 Z" fill="${P.accent}" ${S}/>
+    <g class="arm"><rect x="58" y="92" width="12" height="38" rx="6" fill="${P.dress}" ${S} transform="rotate(5 64 94)"/><circle cx="63" cy="131" r="5.5" fill="${P.skin}" ${S}/></g>
+    <rect x="46" y="152" width="15" height="8" rx="4" fill="${P.shoe}" ${S}/>
+    <rect x="61" y="152" width="15" height="8" rx="4" fill="${P.shoe}" ${S}/>
+    <path d="M38 54 C34 20 50 8 64 10 C80 12 88 26 84 52 C80 44 74 42 70 48 C66 42 58 42 54 48 C50 44 44 46 40 54 Z" fill="${P.hair}" ${S}/>
+    <path d="M76 18 l3 6 6.6 .6 -5 4.4 1.6 6.4 -6.2 -3.4 -6.2 3.4 1.6 -6.4 -5 -4.4 6.6 -.6 Z" fill="${P.accent}" stroke="${P.ink}" stroke-width="1.8"/>
+    <circle cx="60" cy="48" r="19" fill="${P.skin}" ${S}/>
+    <circle cx="80" cy="52" r="3.2" fill="${P.skin}" ${S}/>
+    <g class="eyes">
+      <ellipse cx="70" cy="45" rx="4" ry="5.2" fill="#fff" stroke="${P.ink}" stroke-width="1.2"/>
+      <circle cx="70.6" cy="46.2" r="2.5" fill="${P.ink}"/><circle cx="69.4" cy="44" r="0.9" fill="#fff"/>
+    </g>
+    <path d="M64 35 Q70 32.5 76 35.5" ${S2} fill="none"/>
+    <path d="M70 56 Q75.5 59.5 78.5 54.5" ${S2} fill="none"/>
+    <circle cx="63" cy="54" r="3" fill="${P.blush}"/>
+  </g>`;
+}
+function ezraFront(expr){
+  const mouths = `
+    <g class="m-worried"><path d="M52 67 Q60 63 68 67" ${S2} fill="none"/></g>
+    <g class="m-grin"><path d="M47 64 Q60 80 73 64 Q60 70 47 64 Z" fill="${P.mouth}" ${S}/><ellipse cx="60" cy="68.6" rx="6.5" ry="2.7" fill="${P.tongue}"/></g>
+    <g class="m-smile"><path d="M48 64 Q60 74 72 64" ${S2} fill="none"/></g>`;
+  const eyesOpen = `<g class="eyes eyesOpen">
+      <ellipse cx="50" cy="50" rx="5.4" ry="6.6" fill="#fff" stroke="${P.ink}" stroke-width="1.3"/>
+      <circle cx="50.6" cy="51.4" r="3.1" fill="${P.ink}"/><circle cx="49.1" cy="48.6" r="1.2" fill="#fff"/>
+      <ellipse cx="70" cy="50" rx="5.4" ry="6.6" fill="#fff" stroke="${P.ink}" stroke-width="1.3"/>
+      <circle cx="70.6" cy="51.4" r="3.1" fill="${P.ink}"/><circle cx="69.1" cy="48.6" r="1.2" fill="#fff"/>
+    </g>`;
+  const eyesHappy = `<g class="eyes eyesHappy">
+      <path d="M44.5 50 Q50 43.5 55.5 50" stroke="${P.ink}" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M64.5 50 Q70 43.5 75.5 50" stroke="${P.ink}" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </g>`;
+  const brows = `
+    <g class="b-worried">
+      <path d="M44 41 Q50 37 56 40" ${S2} fill="none"/>
+      <path d="M64 40 Q70 37 76 41" ${S2} fill="none"/>
+    </g>
+    <g class="b-happy">
+      <path d="M44 42 Q50 38.5 56 41.5" ${S2} fill="none"/>
+      <path d="M64 41.5 Q70 38.5 76 42" ${S2} fill="none"/>
+    </g>`;
+  return `<g class="char" data-expr="${expr}">
+    <rect x="46" y="112" width="11" height="24" rx="5" fill="${P.skin}" ${S}/>
+    <rect x="63" y="112" width="11" height="24" rx="5" fill="${P.skin}" ${S}/>
+    <rect x="42" y="132" width="18" height="10" rx="5" fill="${P.shoe}" ${S}/>
+    <rect x="61" y="132" width="18" height="10" rx="5" fill="${P.shoe}" ${S}/>
+    <rect x="40" y="104" width="40" height="18" rx="9" fill="${P.shorts}" ${S}/>
+    <g class="arm"><rect x="26" y="76" width="12" height="34" rx="6" fill="${P.shirt}" ${S} transform="rotate(12 32 78)"/><circle cx="29" cy="112" r="5.5" fill="${P.skin}" ${S}/></g>
+    <g class="arm"><rect x="82" y="76" width="12" height="34" rx="6" fill="${P.shirt}" ${S} transform="rotate(-12 88 78)"/><circle cx="91" cy="112" r="5.5" fill="${P.skin}" ${S}/></g>
+    <rect x="38" y="72" width="44" height="40" rx="16" fill="${P.shirt}" ${S}/>
+    <path d="M52 74 Q60 80 68 74" ${S2} fill="none"/>
+    <circle cx="60" cy="54" r="26" fill="${P.skin}" ${S}/>
+    <path d="M34 54 C30 22 46 12 60 12 C74 12 90 22 86 54 C86 48 82 44 78 49 C77 42 71 41 69 47 C64 40 56 40 51 47 C49 41 43 42 42 49 C38 44 34 48 34 54 Z" fill="${P.hair}" ${S}/>
+    ${eyesOpen}${eyesHappy}
+    ${brows}
+    <path d="M60 57 Q62 59.5 60 61" ${S2} fill="none"/>
+    <g class="dimples">
+      <circle cx="40.5" cy="62" r="2.8" fill="${P.skinDark}"/>
+      <circle cx="79.5" cy="62" r="2.8" fill="${P.skinDark}"/>
+      <path d="M37.4 59.6 A4 4 0 0 1 42.6 59" stroke="#FFF3E2" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <path d="M77.4 59.6 A4 4 0 0 1 82.6 59" stroke="#FFF3E2" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    </g>
+    ${mouths}
+  </g>`;
+}
+function ezraSide(){
+  return `<g class="char">
+    <rect x="52" y="112" width="11" height="24" rx="5" fill="${P.skin}" ${S}/>
+    <rect x="64" y="112" width="11" height="24" rx="5" fill="${P.skin}" ${S}/>
+    <rect x="49" y="132" width="18" height="10" rx="5" fill="${P.shoe}" ${S}/>
+    <rect x="63" y="132" width="18" height="10" rx="5" fill="${P.shoe}" ${S}/>
+    <rect x="48" y="104" width="34" height="18" rx="9" fill="${P.shorts}" ${S}/>
+    <g class="arm"><rect x="42" y="76" width="12" height="34" rx="6" fill="${P.shirt}" ${S} transform="rotate(8 48 78)"/><circle cx="46" cy="112" r="5.5" fill="${P.skin}" ${S}/></g>
+    <rect x="44" y="72" width="38" height="40" rx="16" fill="${P.shirt}" ${S}/>
+    <circle cx="60" cy="54" r="24" fill="${P.skin}" ${S}/>
+    <circle cx="89" cy="57" r="3.4" fill="${P.skin}" ${S}/>
+    <g class="eyes">
+      <ellipse cx="74" cy="48" rx="4.6" ry="5.8" fill="#fff" stroke="${P.ink}" stroke-width="1.2"/>
+      <circle cx="74.6" cy="49.2" r="2.7" fill="${P.ink}"/><circle cx="73.4" cy="46.6" r="1" fill="#fff"/>
+    </g>
+    <path d="M68 40 Q75 36.5 82 40" ${S2} fill="none"/>
+    <path d="M76 66 Q81 70 84 64" ${S2} fill="none"/>
+    <circle cx="80" cy="61" r="2.6" fill="${P.skinDark}"/>
+    <path d="M38 56 C34 24 48 12 62 12 C78 12 90 24 88 52 C84 44 76 42 72 48 C68 42 58 42 54 48 C50 44 42 46 38 56 Z" fill="${P.hair}" ${S}/>
+  </g>`;
+}
+function exprCSS(){
+  return `
+  .char .m-grin,.char .m-smile,.char .m-worried,.char .m-leader,.char .m-nag,
+  .char .b-leader,.char .b-nag,.char .b-worried,.char .b-happy,.char .eyesHappy{display:none}
+  .char[data-expr="worried"] .m-worried{display:block}
+  .char[data-expr="worried"] .b-worried{display:block}
+  .char[data-expr="grin"] .m-grin{display:block}
+  .char[data-expr="grin"] .eyesOpen{display:none}
+  .char[data-expr="grin"] .eyesHappy{display:block}
+  .char[data-expr="grin"] .b-happy{display:block}
+  .char[data-expr="giggle"] .m-smile{display:block}
+  .char[data-expr="giggle"] .eyesOpen{display:none}
+  .char[data-expr="giggle"] .eyesHappy{display:block}
+  .char[data-expr="giggle"] .b-happy{display:block}
+  .char[data-expr="leader"] .m-leader{display:block}
+  .char[data-expr="leader"] .b-leader{display:block}
+  .char[data-expr="nag"] .m-nag{display:block}
+  .char[data-expr="nag"] .b-nag{display:block}
+  .char[data-expr="smile"] .m-smile{display:block}
+  .char[data-expr="smile"] .b-leader{display:block}`;
+}
+document.head.insertAdjacentHTML('beforeend', `<style>${exprCSS()}</style>`);
+</script>
+
+<script>
+/* ============ scene mount (bold flat pop) ============ */
+const scene = document.getElementById('scene');
+scene.innerHTML = `
+<defs>
+  <filter id="pshadow" x="-20%" y="-20%" width="140%" height="150%">
+    <feDropShadow dx="5" dy="5" stdDeviation="0" flood-color="#262238" flood-opacity="0.9"/>
+  </filter>
+</defs>
+
+<rect x="0" y="0" width="960" height="560" fill="#FFF3E2"/>
+<rect x="0" y="430" width="960" height="130" fill="#19B3A6"/>
+<rect x="0" y="430" width="960" height="130" fill="none" stroke="#262238" stroke-width="5"/>
+<rect x="0" y="430" width="960" height="14" fill="#0E8C82" stroke="#262238" stroke-width="4"/>
+
+<!-- confetti motif -->
+<g fill="#E84A8A"><circle cx="500" cy="70" r="6"/><circle cx="905" cy="330" r="5"/><circle cx="320" cy="330" r="4"/></g>
+<g fill="#19B3A6"><path d="M600 80 l4 8 9 .8 -6.8 6 2.2 8.8 -8.4 -4.6 -8.4 4.6 2.2 -8.8 -6.8 -6 9 -.8 Z" transform="scale(0.8)"/><circle cx="860" cy="80" r="5"/></g>
+<g fill="#FFC53D"><circle cx="560" cy="320" r="5"/><circle cx="700" cy="70" r="6"/></g>
+
+<!-- window -->
+<g class="layer-plx">
+  <g filter="url(#pshadow)">
+    <rect x="66" y="82" width="216" height="196" fill="#C8EBE4" stroke="#262238" stroke-width="8"/>
+    <circle cx="104" cy="124" r="15" fill="#FFC53D" stroke="#262238" stroke-width="3.5"/>
+    <g stroke="#262238" stroke-width="2.6">
+      <path d="M104 102 v-8 M104 146 v-8 M82 124 h-8 M126 124 h-8 M89 109 l-6 -6 M119 109 l6 -6 M89 139 l-6 6 M119 139 l6 6"/>
+    </g>
+    <g stroke="#262238" stroke-width="3.5">
+      <path d="M86 252 L86 214 L116 192 L146 214 L146 252 Z" fill="#E84A8A"/>
+      <path d="M156 252 L156 220 L180 202 L204 220 L204 252 Z" fill="#19B3A6"/>
+      <path d="M222 252 L222 220 Q241 196 260 220 L260 252 Z" fill="#19B3A6"/>
+      <rect x="266" y="196" width="11" height="56" rx="4" fill="#E84A8A"/>
+      <path d="M267 196 Q271.5 187 276 196 Z" fill="#E84A8A"/>
+    </g>
+    <line x1="174" y1="86" x2="174" y2="278" stroke="#262238" stroke-width="7"/>
+    <line x1="70" y1="180" x2="282" y2="180" stroke="#262238" stroke-width="7"/>
+  </g>
+</g>
+
+<!-- bismillah plaque -->
+<g class="layer-plx2" filter="url(#pshadow)">
+  <rect x="322" y="72" width="180" height="48" rx="14" fill="#FFC53D" stroke="#262238" stroke-width="4.5"/>
+  <text x="412" y="103" text-anchor="middle" font-size="19" font-weight="900" fill="#262238" font-family="system-ui,sans-serif">BISMILLAH&#8230;</text>
+</g>
+
+<!-- rug -->
+<g filter="url(#pshadow)">
+  <ellipse cx="470" cy="500" rx="160" ry="28" fill="#E84A8A" stroke="#262238" stroke-width="4.5"/>
+  <ellipse cx="470" cy="500" rx="118" ry="19" fill="none" stroke="#262238" stroke-width="3" stroke-dasharray="12 9"/>
+</g>
+
+<!-- cushions -->
+<g class="layer-plx2" filter="url(#pshadow)">
+  <rect x="298" y="418" width="106" height="40" rx="16" fill="#FF5D5D" stroke="#262238" stroke-width="4"/>
+  <rect x="326" y="384" width="106" height="40" rx="16" fill="#FFC53D" stroke="#262238" stroke-width="4" transform="rotate(-7 379 404)"/>
+  <rect x="304" y="452" width="106" height="38" rx="16" fill="#19B3A6" stroke="#262238" stroke-width="4"/>
+</g>
+
+<!-- toy box -->
+<g class="layer-plx2" filter="url(#pshadow)">
+  <path d="M560 428 L692 428 L692 452 L560 452 Z" fill="#E84A8A"/>
+  <circle cx="596" cy="446" r="13" fill="#FFC53D" stroke="#262238" stroke-width="3"/>
+  <path d="M583 446 a13 13 0 0 1 26 0" fill="#FF5D5D"/>
+  <rect x="618" y="426" width="20" height="20" rx="4" fill="#19B3A6" stroke="#262238" stroke-width="3"/>
+  <rect x="644" y="430" width="16" height="16" rx="4" fill="#C8EBE4" stroke="#262238" stroke-width="3"/>
+  <path d="M554 448 L698 448 L688 518 L564 518 Z" fill="#FFC53D" stroke="#262238" stroke-width="4.5"/>
+  <rect x="586" y="470" width="80" height="26" rx="8" fill="#fff" stroke="#262238" stroke-width="3.5"/>
+  <text x="626" y="489" text-anchor="middle" font-size="15" font-weight="900" fill="#262238" font-family="system-ui,sans-serif">MAINAN</text>
+</g>
+
+<!-- bed -->
+<g filter="url(#pshadow)">
+  <rect x="806" y="248" width="30" height="202" rx="12" fill="#FF5D5D" stroke="#262238" stroke-width="4.5"/>
+  <rect x="690" y="326" width="140" height="88" rx="10" fill="#fff" stroke="#262238" stroke-width="4.5"/>
+  <path d="M690 350 Q725 336 760 350 T830 350 L830 414 L690 414 Z" fill="#19B3A6" stroke="#262238" stroke-width="4.5"/>
+  <path d="M710 380 l6 10 h-12 Z M742 372 l6 10 h-12 Z M776 384 l6 10 h-12 Z" fill="#FFC53D" stroke="#262238" stroke-width="2"/>
+  <rect x="806" y="316" width="30" height="38" fill="#E84A8A" stroke="#262238" stroke-width="4"/>
+  <rect x="702" y="318" width="52" height="26" rx="12" fill="#fff" stroke="#262238" stroke-width="3.5"/>
+</g>
+<!-- under-bed shadow + ghost truck -->
+<g>
+  <rect x="684" y="416" width="128" height="32" rx="8" fill="#0E8C82" stroke="#262238" stroke-width="3"/>
+  <g transform="translate(708,404) scale(0.62)">
+    <g stroke="#262238" stroke-width="4" stroke-dasharray="8 6" fill="none">
+      <rect x="0" y="12" width="26" height="26" rx="5"/>
+      <path d="M30 8 L86 8 L82 38 L30 38 Z"/>
+      <circle cx="14" cy="44" r="7"/><circle cx="70" cy="44" r="7"/>
+    </g>
+  </g>
+</g>
+
+<!-- floating ghost truck -->
+<g class="layer-plx2">
+  <g transform="translate(514,252)">
+    <g stroke="#262238" stroke-width="3.5" stroke-dasharray="9 7" fill="none">
+      <rect x="0" y="14" width="30" height="30" rx="7"/>
+      <path d="M34 10 L96 10 L92 44 L34 44 Z"/>
+      <circle cx="16" cy="50" r="8"/><circle cx="76" cy="50" r="8"/>
+    </g>
+    <circle cx="112" cy="2" r="17" fill="#FFC53D" stroke="#262238" stroke-width="4"/>
+    <text x="112" y="10" text-anchor="middle" font-size="21" font-weight="900" fill="#262238" font-family="system-ui,sans-serif">?</text>
+  </g>
+</g>
+
+<!-- actors -->
+<g id="actor-qila" class="actor">
+  <g class="charSlot" transform="translate(148,345) scale(1.08)"><g class="bob react"></g></g>
+  <g class="bubble" transform="translate(148,345)">
+    <rect class="bubble-bg" x="0" y="-48" width="120" height="34" rx="10" fill="#fff" stroke="#262238" stroke-width="3"/>
+    <path class="bubble-bg" d="M50 -15 L60 2 L70 -15 Z" fill="#fff" stroke="#262238" stroke-width="3"/>
+    <text class="bubble-text" x="60" y="-26" text-anchor="middle"></text>
+  </g>
+</g>
+<g id="actor-ezra" class="actor">
+  <g class="charSlot ez" transform="translate(424,360) scale(1.1)"><g class="bob ez react"></g></g>
+  <g class="bubble" transform="translate(424,360) scale(1.1)">
+    <rect class="bubble-bg" x="0" y="-48" width="120" height="34" rx="10" fill="#fff" stroke="#262238" stroke-width="3"/>
+    <path class="bubble-bg" d="M50 -15 L60 2 L70 -15 Z" fill="#fff" stroke="#262238" stroke-width="3"/>
+    <text class="bubble-text" x="60" y="-26" text-anchor="middle"></text>
+  </g>
+</g>
+`;
+
+/* idle: bob lives on same group as react — nest properly */
+(function(){
+  const q=document.querySelector('#actor-qila .charSlot .react');
+  const e=document.querySelector('#actor-ezra .charSlot .react');
+  q.innerHTML=`<g class="bob">${qilaFront('leader','point')}</g>`;
+  e.innerHTML=`<g class="bob ez">${ezraFront('worried')}</g>`;
+})();
+
+document.getElementById('qila-front').innerHTML =
+  `<svg viewBox="14 4 112 162" aria-label="Qila depan">${qilaFront('leader','point')}</svg>`;
+document.getElementById('qila-side').innerHTML =
+  `<svg viewBox="14 8 84 156" aria-label="Qila samping">${qilaSide()}</svg>`;
+document.getElementById('qila-chip').innerHTML =
+  `<svg viewBox="30 22 60 50" aria-label="Qila cerewet">${qilaFront('nag','point')}</svg>`;
+document.getElementById('ezra-front').innerHTML =
+  `<svg viewBox="20 8 80 138" aria-label="Ezra depan">${ezraFront('grin')}</svg>`;
+document.getElementById('ezra-side').innerHTML =
+  `<svg viewBox="20 8 80 138" aria-label="Ezra samping">${ezraSide()}</svg>`;
+document.getElementById('ezra-chip').innerHTML =
+  `<svg viewBox="30 22 60 58" aria-label="Ezra senyum lesung pipit">${ezraFront('grin')}</svg>`;
+</script>
+
+<script>
+/* ============ interactions ============ */
+const QILA_REACTS = [
+  {t:'Yuk cari di sini!', a:'react-jump', e:'leader'},
+  {t:'Taruh mainan di tempatnya, ya!', a:'react-stern', e:'nag'},
+  {t:'Jangan sedih, Ez. Kakak ada.', a:'react-nod', e:'smile'}
+];
+const EZRA_REACTS = [
+  {t:'hihi!', a:'react-pop', e:'grin'},
+  {t:'Hihi, kakak pinter deh!', a:'react-spin', e:'grin'},
+  {t:'Truknya ikut sembunyi-sembunyi, hihi!', a:'react-pop', e:'giggle'}
+];
+
+let AC=null;
+function ac(){ AC = AC || new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); return AC; }
+function pluck(freq, dur=0.4, vol=0.11){
+  try{
+    const a=ac(), t=a.currentTime, o=a.createOscillator(), g=a.createGain();
+    o.type='square'; o.frequency.value=freq;
+    g.gain.setValueAtTime(vol*0.6,t); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t+dur);
+  }catch(e){}
+}
+function blip(){
+  try{
+    const a=ac(), t=a.currentTime, o=a.createOscillator(), g=a.createGain();
+    o.type='square'; o.frequency.setValueAtTime(700,t); o.frequency.exponentialRampToValueAtTime(1050,t+0.08);
+    g.gain.setValueAtTime(0.07,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.13);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t+0.15);
+  }catch(e){}
+}
+function whoosh(){
+  try{
+    const a=ac(), t=a.currentTime, len=Math.floor(a.sampleRate*0.24);
+    const buf=a.createBuffer(1,len,a.sampleRate), d=buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,1.3);
+    const src=a.createBufferSource(); src.buffer=buf;
+    const bp=a.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=1;
+    bp.frequency.setValueAtTime(500,t); bp.frequency.exponentialRampToValueAtTime(1700,t+0.2);
+    const g=a.createGain(); g.gain.setValueAtTime(0.22,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.24);
+    src.connect(bp).connect(g).connect(a.destination); src.start(t);
+  }catch(e){}
+}
+
+const timers={};
+function react(actorSel, list){
+  const actor=document.querySelector(actorSel);
+  const reactG=actor.querySelector('.charSlot .react');
+  const bubble=actor.querySelector('.bubble');
+  const textEl=bubble.querySelector('.bubble-text');
+  const bg=actor.querySelectorAll('.bubble-bg');
+  const char=reactG.querySelector('.char');
+  const r=list[Math.floor(Math.random()*list.length)];
+  char.setAttribute('data-expr', r.e);
+  reactG.classList.remove('react-pop','react-spin','react-jump','react-nod','react-stern');
+  void reactG.getBoundingClientRect();
+  reactG.classList.add(r.a);
+  clearTimeout(timers[actorSel]);
+  timers[actorSel]=setTimeout(()=>{
+    char.setAttribute('data-expr', actorSel.includes('qila')?'leader':'worried');
+  },1500);
+  textEl.textContent=r.t;
+  const bb=textEl.getBBox();
+  const w=Math.max(84, bb.width+26);
+  bg[0].setAttribute('x', 60-w/2); bg[0].setAttribute('width', w);
+  bubble.classList.remove('show'); void bubble.getBoundingClientRect();
+  bubble.classList.add('show');
+  clearTimeout(timers[actorSel+'b']);
+  timers[actorSel+'b']=setTimeout(()=>bubble.classList.remove('show'),1700);
+  blip(); setTimeout(()=>pluck(523+Math.random()*180,0.3,0.05),110);
+}
+document.getElementById('actor-qila').addEventListener('click', ev=>{ ev.stopPropagation(); react('#actor-qila',QILA_REACTS); });
+document.getElementById('actor-ezra').addEventListener('click', ev=>{ ev.stopPropagation(); react('#actor-ezra',EZRA_REACTS); });
+
+const stage=document.getElementById('stage');
+let raf=null;
+stage.addEventListener('pointermove',e=>{
+  if(raf) return;
+  raf=requestAnimationFrame(()=>{
+    const r=stage.getBoundingClientRect();
+    stage.style.setProperty('--px',((e.clientX-r.left)/r.width*2-1).toFixed(3));
+    stage.style.setProperty('--py',((e.clientY-r.top)/r.height*2-1).toFixed(3));
+    raf=null;
+  });
+});
+stage.addEventListener('pointerleave',()=>{ stage.style.setProperty('--px',0); stage.style.setProperty('--py',0); });
+
+/* ---- flipbook ---- */
+function pageArt(n){
+  const OW=3.5, S=`stroke="#262238" stroke-width="${OW}" stroke-linejoin="round"`;
+  if(n===0) return `
+    <svg viewBox="0 0 560 336">
+      <rect width="560" height="336" fill="#FFF3E2"/>
+      <rect y="262" width="560" height="74" fill="#19B3A6" stroke="#262238" stroke-width="4"/>
+      <g transform="translate(210,116) scale(1.05)">${ezraFront('worried')}</g>
+      <g transform="translate(330,146) scale(0.8)">
+        <g stroke="#262238" stroke-width="4" stroke-dasharray="10 7" fill="none">
+          <rect x="0" y="16" width="34" height="34" rx="7"/><path d="M38 12 L108 12 L104 50 L38 50 Z"/>
+          <circle cx="18" cy="56" r="9"/><circle cx="84" cy="56" r="9"/>
+        </g>
+        <circle cx="126" cy="8" r="17" fill="#FFC53D" stroke="#262238" stroke-width="4"/>
+        <text x="126" y="15" text-anchor="middle" font-size="22" font-weight="900" fill="#262238">?</text>
+      </g>
+      <text x="48" y="52" font-size="26" font-weight="900" fill="#262238" font-family="system-ui,sans-serif">BISMILLAH&#8230; TRUKNYA MANA?</text>
+      <text x="48" y="76" font-size="14" font-weight="600" fill="#7C6E58" font-family="system-ui,sans-serif">Oh no, the truck is missing!</text>
+    </svg>`;
+  if(n===1) return `
+    <svg viewBox="0 0 560 336">
+      <rect width="560" height="336" fill="#FFF3E2"/>
+      <rect y="262" width="560" height="74" fill="#19B3A6" stroke="#262238" stroke-width="4"/>
+      <g transform="translate(90,90) scale(1.05)">${qilaFront('leader','point')}</g>
+      <g transform="translate(296,80) rotate(-3)">
+        <rect x="0" y="0" width="186" height="156" rx="14" fill="#fff" ${S}/>
+        <path d="M26 124 Q64 58 100 98 T158 40" stroke="#FF5D5D" stroke-width="5" fill="none" stroke-dasharray="11 8"/>
+        <path d="M148 26 L168 46 M168 26 L148 46" stroke="#262238" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="26" cy="124" r="8" fill="#FFC53D" stroke="#262238" stroke-width="3"/>
+        <rect x="70" y="24" width="46" height="30" rx="8" fill="none" stroke="#262238" stroke-width="3.5" stroke-dasharray="8 6"/>
+        <text x="93" y="74" text-anchor="middle" font-size="16" font-weight="900" fill="#262238" font-family="system-ui,sans-serif">PETA MAINAN</text>
+      </g>
+      <text x="48" y="300" font-size="19" font-weight="900" fill="#262238" font-family="system-ui,sans-serif">"YUK! BUAT PETA MAINAN, CARI BERSAMA!"</text>
+    </svg>`;
+  return `
+    <svg viewBox="0 0 560 336">
+      <rect width="560" height="336" fill="#FFF3E2"/>
+      <rect y="262" width="560" height="74" fill="#19B3A6" stroke="#262238" stroke-width="4"/>
+      <g transform="translate(224,104) scale(1.1)">${ezraFront('grin')}</g>
+      <g transform="translate(358,166) scale(0.9)">
+        <rect x="0" y="16" width="34" height="34" rx="7" fill="#FF5D5D" ${S}/>
+        <path d="M38 12 L108 12 L104 50 L38 50 Z" fill="#FFC53D" ${S}/>
+        <circle cx="18" cy="56" r="9" fill="#262238"/><circle cx="84" cy="56" r="9" fill="#262238"/>
+        <circle cx="18" cy="56" r="3.5" fill="#FFF3E2"/><circle cx="84" cy="56" r="3.5" fill="#FFF3E2"/>
+      </g>
+      <g stroke="#E84A8A" stroke-width="4" stroke-linecap="round">
+        <path d="M206 92 L196 80 M218 88 L216 74 M230 92 L240 82"/>
+      </g>
+      <text x="48" y="300" font-size="19" font-weight="900" fill="#262238" font-family="system-ui,sans-serif">ALHAMDULILLAH, KETEMU! "HIHI!"</text>
+    </svg>`;
+}
+const book=document.getElementById('book');
+const NPAGES=3;
+let cur=0, flipping=false;
+function buildBook(){
+  let html='';
+  for(let i=0;i<NPAGES;i++){
+    html+=`<div class="page ${i===0?'top':i===1?'mid':'under'}" data-i="${i}">
+      <div class="face">${pageArt(i)}<span class="pagenum">${i+1} / ${NPAGES}</span></div>
+      <div class="face back"><span>Belakang halaman · page back</span></div>
+    </div>`;
+  }
+  book.innerHTML=html;
+}
+buildBook();
+function pageEls(){ return [...book.querySelectorAll('.page')]; }
+function showPage(i){
+  pageEls().forEach((p,idx)=>{
+    p.classList.remove('turn','hidden','top','mid','under');
+    if(idx<i){ p.classList.add('hidden'); }
+    else if(idx===i){ p.classList.add('top'); }
+    else if(idx===i+1){ p.classList.add('mid'); }
+    else { p.classList.add('under'); }
+  });
+  document.getElementById('prevBtn').style.visibility = i===0 ? 'hidden' : 'visible';
+  document.getElementById('nextBtn').innerHTML = i===NPAGES-1 ? '&#8635;' : '&#8250;';
+}
+function next(){
+  if(flipping) return;
+  const els=pageEls();
+  if(cur===NPAGES-1){ cur=0; showPage(0); whoosh(); return; }
+  flipping=true;
+  els[cur].classList.add('turn');
+  whoosh();
+  setTimeout(()=>{ els[cur].classList.add('hidden'); cur++; showPage(cur); flipping=false; },620);
+}
+function prev(){
+  if(flipping||cur===0) return;
+  cur--; showPage(cur);
+  const p=pageEls()[cur];
+  flipping=true; whoosh();
+  requestAnimationFrame(()=>{ p.classList.remove('hidden','turn'); });
+  setTimeout(()=>{ showPage(cur); flipping=false; },620);
+}
+showPage(0);
+document.getElementById('nextBtn').addEventListener('click',next);
+document.getElementById('prevBtn').addEventListener('click',prev);
+</script>
+</body>
+</html>
