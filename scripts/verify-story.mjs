@@ -9,12 +9,23 @@
 //   (c) the Hikmah screen renders after the celebration
 //   (d) every .fruit-hit hit circle renders >= 64px in the real layout
 //       (scrollbar-aware: the classic scrollbar shrinks the strip)
+//   (e) no uncaught page errors (Runtime.exceptionThrown / console.error)
+//       during the whole run — collected throughout, asserted at the end
 // plus: elementFromPoint at every fruit center resolves inside .count-fruit.
+//
+// E1 freshness guard: the probe serves dist/ verbatim, so a stale dist would
+// be probed (failure direction safe but confusing). Before serving, the newest
+// mtime of the build inputs (index.html, src/, stories/, characters/, public/,
+// skipping `_`/`.` entries like the build's content copy) is compared against
+// dist/index.html — if anything is newer, or dist/ is missing, the probe exits
+// early with a clear "run npm run build first" message. Choice: exit-early
+// rather than auto-building, to keep the probe single-purpose and never hide
+// build output inside a verification run.
 //
 // Usage: npm run verify:browser   (build first; CHROMIUM_BIN overrides the binary)
 
 import { spawn, spawnSync } from 'node:child_process'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { existsSync, mkdtempSync, readdirSync, rmSync, statSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, extname } from 'node:path'
@@ -40,6 +51,44 @@ const CHROMIUM_BIN =
 if (!CHROMIUM_BIN) {
   console.error('verify:browser: no Chromium/Chrome binary found (set CHROMIUM_BIN).')
   process.exit(1)
+}
+
+// ---------------------------------------------------------------- freshness
+
+/** Newest mtime under `dir`, skipping `_`/`.` entries (mirrors the build's content-copy rule). */
+function newestMtime(dir) {
+  let newest = 0
+  const walk = (path) => {
+    const stats = statSync(path)
+    if (stats.isDirectory()) {
+      for (const entry of readdirSync(path)) {
+        if (entry.startsWith('_') || entry.startsWith('.')) continue
+        walk(join(path, entry))
+      }
+    } else if (stats.mtimeMs > newest) {
+      newest = stats.mtimeMs
+    }
+  }
+  walk(dir)
+  return newest
+}
+
+/** E1 guard: the probe serves dist/ verbatim — refuse to probe a stale or missing dist. */
+function assertDistFresh() {
+  const distIndex = join(DIST, 'index.html')
+  if (!existsSync(distIndex)) {
+    console.error('verify:browser: dist/index.html not found — run `npm run build` first.')
+    process.exit(1)
+  }
+  const newestSource = Math.max(
+    ...[join(ROOT, 'index.html'), ...['src', 'stories', 'characters', 'public'].map((dir) => join(ROOT, dir))].map(
+      newestMtime,
+    ),
+  )
+  if (newestSource > statSync(distIndex).mtimeMs) {
+    console.error('verify:browser: dist/ is stale — a build input is newer than dist/index.html. Run `npm run build` first.')
+    process.exit(1)
+  }
 }
 
 const MIME = {
@@ -207,6 +256,7 @@ async function activeSceneIndex(cdp) {
 
 // ------------------------------------------------------------------- main
 
+assertDistFresh()
 const server = await serveDist()
 const profile = mkdtempSync(join(tmpdir(), 'kisahq-verify-'))
 const chrome = spawn(CHROMIUM_BIN, [
@@ -401,6 +451,14 @@ try {
   // Album sticker granted.
   const sticker = await evalJs(cdp, `JSON.parse(localStorage.getItem('kisahq.album') || '{}')`)
   check('album sticker granted for berbagi-rambutan', sticker['berbagi-rambutan'] === true)
+
+  // (e) E2: page errors were previously only surfaced on timeout — an
+  // error-free run is now an explicit assertion of its own.
+  check(
+    'no uncaught page errors during the whole run',
+    pageErrors.length === 0,
+    pageErrors.length ? `${pageErrors.length} collected: ${pageErrors.slice(0, 3).join(' | ')}` : '',
+  )
 } catch (error) {
   failures.push(`probe crashed: ${error.message}`)
   console.error(`  FAIL probe crashed: ${error.message}`)

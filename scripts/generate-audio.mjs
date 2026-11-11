@@ -6,7 +6,9 @@
 // For every scene narration it writes stories/<slug>/audio/<lang>/<scene>.mp3
 // and records per-language caption timing windows into story.json
 // (scene.audio.mode becomes "baked"). Keys come ONLY from the shell
-// environment — they never enter the repo, config files, or logs. Caption
+// environment — they never enter the repo, config files, or logs, and they
+// are sent as request HEADERS (x-goog-api-key / xi-api-key), never URL
+// query params: keys in URLs land in proxy/server logs. Caption
 // timings are exact when ffprobe is installed, word-count estimates otherwise;
 // the validator checks baked-audio ↔ caption consistency.
 
@@ -69,21 +71,20 @@ mkdirSync(join(audioRoot, 'id'), { recursive: true })
 mkdirSync(join(audioRoot, 'en'), { recursive: true })
 
 async function synthesizeGoogle(text, lang) {
-  const response = await fetch(
-    `https://texttospeech.googleapis.com/v1/text:synthesize?key=${encodeURIComponent(apiKey)}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        input: { text },
-        voice: {
-          languageCode: lang === 'id' ? 'id-ID' : 'en-US',
-          name: options.voice ?? (lang === 'id' ? 'id-ID-Chirp3-HD-Aoede' : 'en-US-Chirp3-HD-Aoede'),
-        },
-        audioConfig: { audioEncoding: 'MP3', speakingRate: 0.85 },
-      }),
-    },
-  )
+  // A1 ruling: keys never ride URLs (they land in proxy/server logs) — the
+  // key goes in the x-goog-api-key header, matching ElevenLabs' header pattern.
+  const response = await fetch('https://texttospeech.googleapis.com/v1/text:synthesize', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+    body: JSON.stringify({
+      input: { text },
+      voice: {
+        languageCode: lang === 'id' ? 'id-ID' : 'en-US',
+        name: options.voice ?? (lang === 'id' ? 'id-ID-Chirp3-HD-Aoede' : 'en-US-Chirp3-HD-Aoede'),
+      },
+      audioConfig: { audioEncoding: 'MP3', speakingRate: 0.85 },
+    }),
+  })
   const json = await response.json()
   if (!response.ok || !json.audioContent) {
     throw new Error(`Google TTS: ${json.error?.message ?? response.status}`)
