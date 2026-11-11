@@ -1,0 +1,11 @@
+{
+  "id": "ezra",
+  "name": "Ezra",
+  "species": "Manusia — adik (karakter fiksi)",
+  "role": {
+    "id": "Adik yang mudah senyum, sayang kakak, periang dan suka bercanda",
+    "en": "A smiley little brother who adores his sister and loves to joke"
+  },
+  "traits": ["mudah senyum", "sayang kakak", "periang dan suka bercanda", "punya lesung pipit"],
+  "artNotes": "Direction: 03 Bold Flat Pop (manager's pick 2026-11-12). Art: the lesung pipit (dimples) MUST be drawn in EVERY render — two bold #B96A3C cheek dots with cream #FFF3E2 highlight arcs, clearly visible even from afar; teal #19B3A6 shirt, sunflower #FFC53D shorts, dark #1F1A2E pop hair; thick 3.5-4px ink outline #262238, skin #E8A66C, big glint eyes; hard offset shadows, saturated flat fills, no gradients. Expression chips: 'easy-smile' (open curve smile, eyes open), 'grin-with-dimples' (filled grin + tongue + happy arc eyes + bold dimples), 'joke-face' (tilted grin + one raised brow + one-eye wink). Voice/pacing: bouncy and giggly, quick tempo, jokes land on a beat then 'hihi!'; he never stays whiny long — the easy smile returns fast (his smile dropping is a rare, story-carrying beat). Fictional character: no surname, no photos, no real age."
+}
