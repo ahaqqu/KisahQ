@@ -1,0 +1,11 @@
+{
+  "id": "momo",
+  "name": "Momo si Siput",
+  "species": "Siput",
+  "role": {
+    "id": "Siput kecil yang datang terlambat",
+    "en": "A little snail who arrives late"
+  },
+  "traits": ["pemalu", "santun", "senang berbagi"],
+  "artNotes": "Small snail with caramel spiral shell, sand-cream body, gentle eyes on tall stalks; moves slowly with a patient smile."
+}

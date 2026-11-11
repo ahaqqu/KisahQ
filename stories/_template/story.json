@@ -1,0 +1,143 @@
+{
+  "_comment": "Template untuk stories/<slug>/story.json. Jalankan `npm run new-story -- <slug>` untuk menyalin template ini ke kisah baru, lalu ganti seluruh teks TODO. Struktur di bawah sudah lulus validator.",
+  "slug": "SLUG_PLACEHOLDER",
+  "title": {
+    "id": "TODO Judul Kisah",
+    "en": "TODO Story Title"
+  },
+  "ageBand": "3-4",
+  "characters": ["toto", "lili"],
+  "scenes": [
+    {
+      "id": "pembuka",
+      "bg": "orchard",
+      "actors": [{ "character": "toto", "pose": "idle" }],
+      "narration": {
+        "id": "TODO Narasi pembuka — mulai dengan Bismillah… yuk mulai!",
+        "en": "TODO Opening narration — start with Bismillah… let's begin!"
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "tree",
+          "praise": {
+            "id": "TODO Pujian positif singkat.",
+            "en": "TODO Short positive praise."
+          }
+        }
+      ],
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "scene-2",
+      "bg": "orchard",
+      "actors": [{ "character": "lili", "pose": "happy" }],
+      "narration": {
+        "id": "TODO Narasi adegan kedua (boleh sapa Assalamualaikum).",
+        "en": "TODO Second scene narration (may include the Assalamualaikum greeting)."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "lili",
+          "praise": {
+            "id": "TODO Pujian positif singkat.",
+            "en": "TODO Short positive praise."
+          }
+        }
+      ],
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "scene-3",
+      "bg": "orchard",
+      "actors": [{ "character": "toto", "pose": "jump" }],
+      "narration": {
+        "id": "TODO Narasi adegan ketiga.",
+        "en": "TODO Third scene narration."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "toto",
+          "praise": {
+            "id": "TODO Pujian positif singkat.",
+            "en": "TODO Short positive praise."
+          }
+        }
+      ],
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "scene-4",
+      "bg": "orchard",
+      "actors": [{ "character": "lili", "pose": "idle" }],
+      "narration": {
+        "id": "TODO Narasi adegan keempat.",
+        "en": "TODO Fourth scene narration."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "lili",
+          "praise": {
+            "id": "TODO Pujian positif singkat.",
+            "en": "TODO Short positive praise."
+          }
+        }
+      ],
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "scene-5",
+      "bg": "orchard",
+      "actors": [{ "character": "toto", "pose": "happy" }],
+      "narration": {
+        "id": "TODO Narasi adegan kelima.",
+        "en": "TODO Fifth scene narration."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "basket",
+          "praise": {
+            "id": "TODO Pujian positif singkat.",
+            "en": "TODO Short positive praise."
+          }
+        }
+      ],
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "penutup",
+      "bg": "orchard",
+      "actors": [{ "character": "toto", "pose": "wave" }],
+      "narration": {
+        "id": "TODO Narasi penutup — tutup dengan Alhamdulillah.",
+        "en": "TODO Closing narration — end with Alhamdulillah."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "toto",
+          "praise": {
+            "id": "TODO Pujian positif singkat.",
+            "en": "TODO Short positive praise."
+          }
+        }
+      ],
+      "sfx": "sparkle",
+      "audio": { "mode": "tts", "captions": [] }
+    }
+  ],
+  "hikmah": {
+    "id": "TODO Hikmah satu kalimat (WAJIB ada).",
+    "en": "TODO One-sentence hikmah (REQUIRED).",
+    "prompts": [
+      {
+        "id": "TODO Pertanyaan diskusi untuk orang tua.",
+        "en": "TODO Parent discussion prompt."
+      }
+    ]
+  }
+}
