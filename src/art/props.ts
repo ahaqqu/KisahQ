@@ -68,17 +68,19 @@ function basket(): string {
 
 /**
  * Tap-target geometry for the count interaction. Non-negotiable: every tap
- * target renders ≥64px even on the narrowest supported phone (320px viewport
- * → ~298px strip after app padding + page border). Hit circles are
- * transparent, oversized (r = FRUIT_HIT_RADIUS SVG units), and laid out on a
- * grid that guarantees no two circles overlap. Pinned by
- * tests/fruit-targets.test.ts.
+ * target renders ≥64px even on the narrowest supported phone in a
+ * scrollbar-rendering context: 320px viewport − ~15px classic scrollbar →
+ * 305px layout width − 16px screen padding − 6px page border → 283px strip.
+ * Hit circles are transparent, oversized (r = FRUIT_HIT_RADIUS SVG units),
+ * and laid out on a grid that guarantees no two circles overlap. Pinned by
+ * tests/fruit-targets.test.ts (thermos D2) and the real-browser probe.
  */
-export const FRUIT_HIT_RADIUS = 40
+export const FRUIT_HIT_RADIUS = 47
+export const FRUIT_VIEWBOX_ORIGIN_X = -10
 const FRUIT_COLS = 4
-const FRUIT_ROW_SPACING = 90
-const FRUIT_VIEWBOX_WIDTH = 370
-const FRUIT_X_SPREAD: [number, number] = [45, 325]
+const FRUIT_ROW_SPACING = 96
+const FRUIT_VIEWBOX_WIDTH = 400
+const FRUIT_X_SPREAD: [number, number] = [40, 330]
 
 export interface FruitHitGeometry {
   viewBoxWidth: number
@@ -120,7 +122,7 @@ function groundFruits(count: number): string {
   </g>`,
     )
     .join('')
-  return `<svg viewBox="0 0 ${geometry.viewBoxWidth} ${geometry.viewBoxHeight}" aria-hidden="true" class="prop-fruits-svg" data-fruit-total="${count}">
+  return `<svg viewBox="${FRUIT_VIEWBOX_ORIGIN_X} 0 ${geometry.viewBoxWidth} ${geometry.viewBoxHeight}" aria-hidden="true" class="prop-fruits-svg" data-fruit-total="${count}">
     ${items}
   </svg>`
 }
