@@ -4,7 +4,11 @@ import type { Story } from './types'
  * App-side story registry. The repo is the story factory: adding a story =
  * add `stories/<slug>/story.json` (validated by CI) + register the slug here.
  */
-export const REGISTERED_STORIES = ['berbagi-rambutan', 'qila-ezra-truk-hilang'] as const
+export const REGISTERED_STORIES = [
+  'berbagi-rambutan',
+  'qila-ezra-truk-hilang',
+  'assalamualaikum-satu-senyum-damai',
+] as const
 
 /**
  * Light structural check (NOT the enforcement layer — that is the Zod

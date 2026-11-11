@@ -1,0 +1,275 @@
+{
+  "slug": "assalamualaikum-satu-senyum-damai",
+  "title": {
+    "id": "Assalamualaikum, Satu Senyum Damai",
+    "en": "Assalamualaikum, a Smile of Peace"
+  },
+  "ageBand": "2-3",
+  "characters": ["qila", "ezra", "lili", "toto", "nana", "momo"],
+  "scenes": [
+    {
+      "id": "pembuka",
+      "bg": "kamar-ezra",
+      "actors": [
+        { "character": "qila", "pose": "happy" },
+        { "character": "ezra", "pose": "idle" }
+      ],
+      "narration": {
+        "id": "Bismillah… yuk mulai! Pagi cerah di rumah. Ezra bangun tidur. Kak Qila menyapa: \"Assalamualaikum!\"",
+        "en": "Bismillah… let's begin! Bright morning at home. Ezra wakes up. Big sister Qila greets: \"Assalamualaikum!\""
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "ezra",
+          "praise": {
+            "id": "Selamat pagi, Ezra! Ayo belajar salam.",
+            "en": "Good morning, Ezra! Let's learn to greet."
+          }
+        }
+      ],
+      "sfx": "chime",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "sapa-ayah-bunda",
+      "bg": "ruang-tamu",
+      "actors": [
+        { "character": "qila", "pose": "happy" },
+        { "character": "ezra", "pose": "happy" }
+      ],
+      "narration": {
+        "id": "Ezra mencoba: \"Assalamualaikum, Ayah! Assalamualaikum, Bunda!\" Senyumnya lebar, lesung pipitnya muncul.",
+        "en": "Ezra tries it: \"Assalamualaikum, Dad! Assalamualaikum, Mom!\" His smile grows — dimples pop!"
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "ezra",
+          "praise": {
+            "id": "Alhamdulillah, Ezra pandai menyapa!",
+            "en": "Alhamdulillah, Ezra greets so sweetly!"
+          }
+        }
+      ],
+      "sfx": "sparkle",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "jawab-salam",
+      "bg": "ruang-tamu",
+      "actors": [
+        { "character": "qila", "pose": "happy" },
+        { "character": "ezra", "pose": "jump" }
+      ],
+      "narration": {
+        "id": "\"Kakak bilang Assalamualaikum,\" kata Qila. \"Kamu jawab: Waalaikumsalam!\" Ezra riang menjawab. Tepuk tangan!",
+        "en": "\"I say Assalamualaikum,\" says Qila. \"You answer: Waalaikumsalam!\" Ezra answers with a giggle. Clap clap!"
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "qila",
+          "praise": {
+            "id": "Salaman! Jawabanmu hebat sekali!",
+            "en": "High five! Your answer is amazing!"
+          }
+        }
+      ],
+      "sfx": "pluck",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "jalan-musala",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "idle" },
+        { "character": "ezra", "pose": "wave" }
+      ],
+      "narration": {
+        "id": "Ezra jalan dengan Ayah ke musala. Qila ikut di samping. Tangan di dada, Ezra menyapa tetangga: \"Assalamualaikum!\"",
+        "en": "Ezra walks with Dad to the musala. Qila walks along. Hand on heart, Ezra greets the neighbours: \"Assalamualaikum!\""
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "ezra",
+          "praise": {
+            "id": "Tangan di dada, senyum di wajah!",
+            "en": "Hand on heart, smile on your face!"
+          }
+        }
+      ],
+      "sfx": "chime",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "teman-baru",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "idle" },
+        { "character": "ezra", "pose": "idle" },
+        { "character": "lili", "pose": "idle" }
+      ],
+      "narration": {
+        "id": "Di tempat main ada teman baru! Lili menunggu, Ezra malu berbisik. \"Ezra, jangan berbisik! Ucapkan jelas!\" kata Qila.",
+        "en": "At the play spot — a new friend! Lili waits; Ezra whispers, shy. \"Ezra, no whispering!\" says Qila. \"Say it clearly!\""
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "qila",
+          "praise": {
+            "id": "Qila cerewet tapi sayang Ezra, ya?",
+            "en": "Qila nags, but she loves Ezra!"
+          }
+        }
+      ],
+      "sfx": "pluck",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "sapa-lili",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "happy" },
+        { "character": "ezra", "pose": "happy" },
+        { "character": "lili", "pose": "happy" }
+      ],
+      "narration": {
+        "id": "Ezra menarik napas: \"Assalamualaikum!\" \"Waalaikumsalam!\" jawab Lili riang. Teman baru! Lesung pipit Ezra bersinar.",
+        "en": "Ezra takes a breath: \"Assalamualaikum!\" \"Waalaikumsalam!\" Lili beams back. New friends! Ezra's dimples shine."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "ezra",
+          "praise": {
+            "id": "Waalaikumsalam, teman baru! Ayo main!",
+            "en": "Waalaikumsalam, new friend! Let's play!"
+          }
+        }
+      ],
+      "sfx": "sparkle",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "rantai-salam",
+      "bg": "orchard",
+      "actors": [
+        { "character": "qila", "pose": "happy" },
+        { "character": "ezra", "pose": "happy" },
+        { "character": "lili", "pose": "happy" },
+        { "character": "toto", "pose": "happy" },
+        { "character": "nana", "pose": "happy" },
+        { "character": "momo", "pose": "happy" }
+      ],
+      "narration": {
+        "id": "Salam menjalar di seluruh kampung! Toto, Nana, dan Momo ikut tersenyum. Satu sapaan, hati semua damai.",
+        "en": "The salam travels all around the kampung! Toto, Nana, and Momo smile too. One hello — peaceful hearts everywhere."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "toto",
+          "praise": {
+            "id": "Salam membuat semua berteman!",
+            "en": "Salam makes everyone friends!"
+          }
+        }
+      ],
+      "sfx": "chime",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "arti-salam",
+      "bg": "ruang-tamu",
+      "actors": [
+        { "character": "qila", "pose": "idle" },
+        { "character": "ezra", "pose": "idle" }
+      ],
+      "narration": {
+        "id": "\"Tahu arti salam?\" tanya Qila lembut. \"Assalamualaikum artinya semoga keselamatan untukmu.\" Salam itu doa damai untuk teman.",
+        "en": "\"Do you know what salam means?\" asks Qila. \"Assalamualaikum means peace be upon you.\" It is a small prayer of peace."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "qila",
+          "praise": {
+            "id": "Doa damai untuk teman, ayo diucapkan!",
+            "en": "A prayer of peace — say it kindly!"
+          }
+        }
+      ],
+      "sfx": "chime",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "giliran-kamu",
+      "bg": "kamar-ezra",
+      "actors": [
+        { "character": "qila", "pose": "happy" },
+        { "character": "ezra", "pose": "jump" }
+      ],
+      "narration": {
+        "id": "Sekarang giliranmu! Ayo ucapkan: \"Assalamualaikum!\" Ezra dan Qila menunggu sapaanmu.",
+        "en": "Now it is your turn! Say it with Ezra: \"Assalamualaikum!\" Ezra and Qila wait for your hello."
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "ezra",
+          "praise": {
+            "id": "Hebat! Kamu bilang Assalamualaikum!",
+            "en": "Yay! You said Assalamualaikum!"
+          }
+        }
+      ],
+      "sfx": "pop",
+      "audio": { "mode": "tts", "captions": [] }
+    },
+    {
+      "id": "penutup",
+      "bg": "kamar-ezra",
+      "actors": [
+        { "character": "qila", "pose": "wave" },
+        { "character": "ezra", "pose": "wave" }
+      ],
+      "narration": {
+        "id": "Malam tiba. Alhamdulillah, hari yang manis! Ezra menatap kamu: \"Assalamualaikum!\" Lesung pipitnya berkedip. Sampai jumpa!",
+        "en": "Night comes. Alhamdulillah, sweet day! Ezra looks at you: \"Assalamualaikum!\" His dimples wink. See you soon!"
+      },
+      "interactions": [
+        {
+          "type": "tap",
+          "target": "ezra",
+          "praise": {
+            "id": "Waalaikumsalam, Ezra! Sampai jumpa!",
+            "en": "Waalaikumsalam, Ezra! See you!"
+          }
+        }
+      ],
+      "sfx": "sparkle",
+      "audio": { "mode": "tts", "captions": [] }
+    }
+  ],
+  "hikmah": {
+    "id": "Salam bukan sekadar kata — \"Assalamualaikum\" artinya semoga keselamatan untukmu.",
+    "en": "Salam is more than a word — \"Assalamualaikum\" means peace be upon you.",
+    "prompts": [
+      {
+        "id": "Siapa yang akan kamu sapa dengan salam hari ini?",
+        "en": "Who will you greet with salam today?"
+      },
+      {
+        "id": "Apa jawaban salam yang tepat?",
+        "en": "What is the right reply to a salam?"
+      },
+      {
+        "id": "Bagaimana rasanya hatimu saat disapa salam?",
+        "en": "How does your heart feel when greeted with salam?"
+      }
+    ]
+  }
+}
