@@ -149,6 +149,23 @@ button {
 
 .start-button {
   width: 100%;
+  line-height: 1.2;
+}
+
+/* Two-line start button (F2): the generic "Mulai Kisah" label on top, the
+   story's own title beneath — sibling buttons are visually distinct, and the
+   same distinction is carried to screen readers via aria-label. */
+.start-button__label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.start-button__title {
+  display: block;
+  font-size: 1.35rem;
+  font-weight: 700;
 }
 
 /* ------------------------------------------------------------------- book */

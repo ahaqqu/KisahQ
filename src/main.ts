@@ -1,9 +1,10 @@
 import { getSelectedProvider } from './audio/registry'
 import { batikStar, megaMendung } from './art'
 import { renderParentGateButton } from './engine/parent-gate'
+import { renderStoryButtons } from './engine/start-buttons'
 import { StoryPlayer } from './engine/player'
 import { getLang, localized, t } from './i18n'
-import { loadStory, REGISTERED_STORIES } from './story/loader'
+import { loadStory, REGISTERED_STORIES, STORY_TITLES } from './story/loader'
 import type { Story } from './story/types'
 import './styles.css'
 
@@ -106,16 +107,12 @@ function renderStartScreen(screen: HTMLElement): void {
   }
 
   const storyList = screen.querySelector<HTMLElement>('.story-list')
-  for (const slug of REGISTERED_STORIES) {
-    const button = document.createElement('button')
-    button.type = 'button'
-    button.className = 'big-button start-button'
-    button.textContent = t('startButton')
-    button.dataset.slug = slug
-    button.addEventListener('click', () => {
-      void openStory(slug)
-    })
-    storyList?.appendChild(button)
+  if (storyList) {
+    renderStoryButtons(
+      storyList,
+      REGISTERED_STORIES.map((slug) => ({ slug, title: STORY_TITLES[slug] })),
+      (slug) => void openStory(slug),
+    )
   }
 }
 

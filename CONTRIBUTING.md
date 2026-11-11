@@ -26,13 +26,17 @@ factory**: creating a new story is a content PR, not a code change.
      personal stories star the family canon (Qila & Ezra) and must stay
      consistent with their canon files (traits verbatim, Ezra's dimples in art
      notes).
-4. **Validate**: `npm run validate:stories` — fixes are printed with JSON paths.
-5. **Play it**: `npm run dev`, then `npm run build` if you touched art/engine.
-6. **Optional — baked audio** (owner only, never CI): with keys from the shell,
+4. **Register + title**: add the slug to `REGISTERED_STORIES` and the story's
+   title to `STORY_TITLES` in `src/story/loader.ts` (the start-screen buttons
+   render the title there — a missing entry fails `npm run check`; a title
+   that drifts from story.json fails `npm test`).
+5. **Validate**: `npm run validate:stories` — fixes are printed with JSON paths.
+6. **Play it**: `npm run dev`, then `npm run build` if you touched art/engine.
+7. **Optional — baked audio** (owner only, never CI): with keys from the shell,
    `GOOGLE_TTS_KEY=... node scripts/generate-audio.mjs <slug>` bakes
    `audio/<lang>/<scene>.mp3` + caption windows; the validator checks
    baked-audio ↔ caption consistency.
-7. **PR**: open it against `main`, link the tracking issue, CI must be green.
+8. **PR**: open it against `main`, link the tracking issue, CI must be green.
    Merging = story live.
 
 ## Adding a new character
