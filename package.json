@@ -15,7 +15,8 @@
     "test:watch": "vitest",
     "validate:stories": "node scripts/validate-stories.mjs",
     "new-story": "node scripts/new-story.mjs",
-    "generate-audio": "node scripts/generate-audio.mjs"
+    "generate-audio": "node scripts/generate-audio.mjs",
+    "verify:browser": "node scripts/verify-story.mjs"
   },
   "devDependencies": {
     "@types/node": "26.6.6",
