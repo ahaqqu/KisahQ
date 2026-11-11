@@ -293,9 +293,15 @@ button {
 }
 
 .scenery__fruits {
-  left: 4%;
-  bottom: 30%;
-  width: min(40%, 230px);
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 10%;
+  width: min(100%, 460px);
+}
+
+/* Transparent ≥64px-equivalent hit circle over each fruit (see props.ts). */
+.fruit-hit {
+  cursor: pointer;
 }
 
 .actors {

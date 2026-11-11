@@ -66,16 +66,62 @@ function basket(): string {
   </svg>`
 }
 
+/**
+ * Tap-target geometry for the count interaction. Non-negotiable: every tap
+ * target renders ≥64px even on the narrowest supported phone (320px viewport
+ * → ~298px strip after app padding + page border). Hit circles are
+ * transparent, oversized (r = FRUIT_HIT_RADIUS SVG units), and laid out on a
+ * grid that guarantees no two circles overlap. Pinned by
+ * tests/fruit-targets.test.ts.
+ */
+export const FRUIT_HIT_RADIUS = 40
+const FRUIT_COLS = 4
+const FRUIT_ROW_SPACING = 90
+const FRUIT_VIEWBOX_WIDTH = 370
+const FRUIT_X_SPREAD: [number, number] = [45, 325]
+
+export interface FruitHitGeometry {
+  viewBoxWidth: number
+  viewBoxHeight: number
+  hitRadius: number
+  /** [cx, cy] per fruit, SVG units. */
+  spots: Array<[number, number]>
+}
+
+export function fruitHitGeometry(count: number): FruitHitGeometry {
+  const rows = Math.ceil(count / FRUIT_COLS)
+  const rowY = (row: number) => (rows === 1 ? 75 : 60 + row * FRUIT_ROW_SPACING)
+  const spots: Array<[number, number]> = []
+  let remaining = count
+  for (let row = 0; row < rows; row += 1) {
+    const inRow = Math.min(FRUIT_COLS, remaining)
+    const [startX, endX] = FRUIT_X_SPREAD
+    for (let i = 0; i < inRow; i += 1) {
+      const x = inRow === 1 ? (startX + endX) / 2 : startX + (i * (endX - startX)) / (inRow - 1)
+      spots.push([x, rowY(row)])
+    }
+    remaining -= inRow
+  }
+  return {
+    viewBoxWidth: FRUIT_VIEWBOX_WIDTH,
+    viewBoxHeight: rowY(rows - 1) + FRUIT_HIT_RADIUS + 20,
+    hitRadius: FRUIT_HIT_RADIUS,
+    spots,
+  }
+}
+
 function groundFruits(count: number): string {
-  const spots: Array<[number, number]> = [
-    [24, 78], [56, 90], [92, 74], [124, 92], [156, 80],
-    [40, 62], [110, 60], [144, 64], [72, 58], [132, 78],
-  ]
-  const items = spots.slice(0, count)
-  return `<svg viewBox="0 0 180 110" aria-hidden="true" class="prop-fruits-svg" data-fruit-total="${count}">
-    ${items
-      .map(([x, y], i) => `<g class="count-fruit" data-fruit-index="${i}" transform="translate(${x},${y})">${rambutan()}</g>`)
-      .join('')}
+  const geometry = fruitHitGeometry(count)
+  const items = geometry.spots
+    .map(
+      ([x, y], i) => `<g class="count-fruit" data-fruit-index="${i}" transform="translate(${x},${y})">
+    <circle class="fruit-hit" r="${geometry.hitRadius}" fill="transparent" pointer-events="all"/>
+    <g transform="scale(1.4)">${rambutan()}</g>
+  </g>`,
+    )
+    .join('')
+  return `<svg viewBox="0 0 ${geometry.viewBoxWidth} ${geometry.viewBoxHeight}" aria-hidden="true" class="prop-fruits-svg" data-fruit-total="${count}">
+    ${items}
   </svg>`
 }
 
