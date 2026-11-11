@@ -14,6 +14,32 @@ const MIN_TARGET_PX = 64
 /** Schema-legal interaction counts (scripts/validate-stories.mjs CountInteraction). */
 const SCHEMA_COUNTS = [2, 3, 4, 5, 6, 7, 8, 9, 10]
 
+// Strip-vs-actors clearance pin (thermos D1): the fruits strip must sit
+// entirely above the .actors container band, whose full-width box would
+// otherwise swallow taps on the last row (elementFromPoint returns .actors).
+// Constants mirror src/styles.css and the layout assumptions at the smallest
+// reachable stage (book min-height 420 − narration bar 96 − page border 6).
+const WORST_STAGE_HEIGHT_PX = 318
+const ACTORS_BOTTOM_RATIO = 0.06 // .actors { bottom: 6% }
+const ACTOR_BAND_HEIGHT_PX = 84 // actor width clamp floor 96px × SVG aspect 140/160
+const STRIP_BOTTOM_RATIO = 0.3 // .scenery__fruits { bottom: 30% }
+const STRIP_MAX_WIDTH_PX = 460 // .scenery__fruits { width: min(100%, 460px) }
+const MIN_CLEARANCE_PX = 4
+
+describe('strip-vs-actors clearance (thermos D1: no soft-lock)', () => {
+  it.each(SCHEMA_COUNTS)('count=%i lowest hit circle stays above the actors band', (count) => {
+    const geometry = fruitHitGeometry(count)
+    const stripWidth = Math.min(NARROWEST_STRIP_PX, STRIP_MAX_WIDTH_PX)
+    const stripHeight = stripWidth * (geometry.viewBoxHeight / geometry.viewBoxWidth)
+    const lowestCircleBottomUnits = Math.max(...geometry.spots.map(([, y]) => y)) + geometry.hitRadius
+    const lowestHitPx =
+      STRIP_BOTTOM_RATIO * WORST_STAGE_HEIGHT_PX +
+      stripHeight * ((geometry.viewBoxHeight - lowestCircleBottomUnits) / geometry.viewBoxHeight)
+    const actorsBandTopPx = ACTORS_BOTTOM_RATIO * WORST_STAGE_HEIGHT_PX + ACTOR_BAND_HEIGHT_PX
+    expect(lowestHitPx - actorsBandTopPx).toBeGreaterThanOrEqual(MIN_CLEARANCE_PX)
+  })
+})
+
 describe('count-interaction tap targets (≥64px, thermos C1)', () => {
   it.each(SCHEMA_COUNTS)('count=%i renders ≥64px hit circles on the narrowest stage', (count) => {
     const geometry = fruitHitGeometry(count)

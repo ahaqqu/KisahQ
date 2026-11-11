@@ -295,7 +295,12 @@ button {
 .scenery__fruits {
   left: 50%;
   transform: translateX(-50%);
-  bottom: 10%;
+  /* Must stay ABOVE the .actors band (bottom 6% + ~84px): a full-width
+     container box at the bottom would swallow taps on the last fruit row
+     (elementFromPoint returns .actors -> count interaction soft-locks).
+     Cleared for every reachable stage height; pinned by
+     tests/fruit-targets.test.ts (thermos D1). */
+  bottom: 30%;
   width: min(100%, 460px);
 }
 
