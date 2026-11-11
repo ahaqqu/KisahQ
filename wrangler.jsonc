@@ -1,0 +1,23 @@
+{
+  // KisahQ — interactive toddler story app.
+  // Assets-only Worker: no worker script, zero telemetry, zero server logic.
+  // The Vite build (dist/) is served as Worker static assets with SPA
+  // fallback (the app is one continuously-interactive screen).
+  // Deployed via ./scripts/deploy.sh cloudflare (single entrypoint).
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "kisahq",
+  "compatibility_date": "2026-11-10",
+  "assets": {
+    "directory": "dist",
+    "not_found_handling": "single-page-application"
+  },
+  // Canonical production hostname, attached as a Worker Custom Domain at
+  // deploy time (custom_domain = true auto-creates DNS in the ahaqqu.com
+  // zone — same mechanism as the RumaQ app Worker; no nginx/VPS changes).
+  "routes": [
+    {
+      "pattern": "kisahq.ahaqqu.com",
+      "custom_domain": true
+    }
+  ]
+}
