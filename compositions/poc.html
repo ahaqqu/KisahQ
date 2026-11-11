@@ -1,0 +1,276 @@
+<!doctype html>
+<!--
+  KisahQ POC composition — proof that HyperFrames can render a Bold Flat Pop
+  beat to deterministic MP4 on this laptop. 12 s @ 1280x720 30fps, no external
+  media assets (GSAP is vendored at assets/vendor/gsap.min.js).
+
+  Palette + style tokens mirror src/art/qila-ezra.ts (03 Bold Flat Pop canon):
+  ink #262238, coral #FF5D5D, teal #19B3A6, sun #FFC53D, cream #FFF3E2.
+
+  Render (repo root):
+    HYPERFRAMES_NO_TELEMETRY=1 HYPERFRAMES_NO_AUTO_INSTALL=1 HYPERFRAMES_NO_UPDATE_CHECK=1 npx hyperframes render -c compositions/poc.html -o videos/poc.mp4
+-->
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280, height=720" />
+    <script src="../assets/vendor/gsap.min.js"></script>
+    <style>
+      :root {
+        --ink: #262238;
+        --cream: #fff3e2;
+        --coral: #ff5d5d;
+        --teal: #19b3a6;
+        --sun: #ffc53d;
+        --magenta: #e84a8a;
+        /*
+          Font reality: no "Nunito"/"Poppins" file exists on this machine, the
+          pinned chrome-headless-shell bundles no fonts, and hyperframes bundles
+          only Inter/JetBrains Mono/EB Garamond — these names resolve via a
+          machine-local fontconfig substitution, which is what produces the
+          rounded look. Stack is left as-is (the PR-B target families + generic
+          fallback) because any rename would change rendered bytes and stale the
+          §0 sha256 evidence. Same-machine renders stay deterministic; PR-B must
+          commit real @font-face fonts under assets/fonts/ — docs/REWRITE-DESIGN.md §9.6.
+        */
+        --font-display: "Nunito", "Poppins", sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: var(--coral);
+        font-family: var(--font-display);
+      }
+      #root {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      /* Full-bleed background: untimed child, absolute inset 0. */
+      #bg {
+        position: absolute;
+        inset: 0;
+        background: var(--coral);
+      }
+      #bg .band {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 148px;
+        background: var(--teal);
+        border-top: 6px solid var(--ink);
+      }
+      #bg .confetti {
+        position: absolute;
+        border-radius: 50%;
+      }
+      /* Title clip contents */
+      #title-wrap {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 130px;
+        z-index: 3;
+      }
+      #title-card {
+        text-align: center;
+      }
+      #title-card h1 {
+        font-size: 132px;
+        font-weight: 900;
+        color: var(--cream);
+        letter-spacing: -0.02em;
+        line-height: 1;
+        text-shadow: 6px 6px 0 var(--ink);
+      }
+      #title-card .chip {
+        display: inline-block;
+        margin-top: 26px;
+        padding: 10px 34px;
+        background: var(--sun);
+        border: 5px solid var(--ink);
+        border-radius: 999px;
+        font-size: 40px;
+        font-weight: 900;
+        color: var(--ink);
+      }
+      /* Character clip contents */
+      #buddy-wrap {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        z-index: 2;
+      }
+      #buddy {
+        width: 300px;
+        height: 300px;
+        margin-bottom: 120px;
+      }
+      /* Outro clip contents */
+      #outro-wrap {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #outro-panel {
+        width: 760px;
+        padding: 54px 64px;
+        background: var(--cream);
+        border: 6px solid var(--ink);
+        border-radius: 36px;
+        box-shadow: 10px 10px 0 var(--ink);
+        text-align: center;
+      }
+      #outro-panel .line {
+        font-size: 46px;
+        font-weight: 900;
+        color: var(--ink);
+        line-height: 1.25;
+      }
+      #outro-panel .hikmah {
+        margin-top: 26px;
+        display: inline-block;
+        padding: 12px 30px;
+        background: var(--teal);
+        border: 5px solid var(--ink);
+        border-radius: 18px;
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--cream);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="poc"
+      data-start="0"
+      data-duration="12"
+      data-width="1280"
+      data-height="720"
+      data-fps="30"
+    >
+      <!-- Untimed full-bleed background (always visible from frame 0). -->
+      <div id="bg">
+        <div class="band"></div>
+        <div class="confetti" style="left: 90px; top: 110px; width: 26px; height: 26px; background: var(--sun)"></div>
+        <div class="confetti" style="left: 1120px; top: 90px; width: 18px; height: 18px; background: var(--magenta)"></div>
+        <div class="confetti" style="left: 200px; top: 420px; width: 14px; height: 14px; background: var(--teal)"></div>
+        <div class="confetti" style="left: 1020px; top: 380px; width: 22px; height: 22px; background: var(--cream)"></div>
+      </div>
+
+      <!-- Beat 1: title scale-in -->
+      <div id="title-wrap" class="clip" data-start="0.3" data-duration="8.2" data-track-index="1">
+        <div id="title-card">
+          <h1>KisahQ POC</h1>
+          <div class="chip">HTML → MP4 · HyperFrames</div>
+        </div>
+      </div>
+
+      <!-- Beat 2: circle buddy bounce -->
+      <div id="buddy-wrap" class="clip" data-start="1.8" data-duration="6.7" data-track-index="2">
+        <svg id="buddy" viewBox="0 0 160 160" aria-hidden="true">
+          <g id="buddy-body">
+            <circle cx="80" cy="80" r="56" fill="#19b3a6" stroke="#262238" stroke-width="4.5" />
+            <ellipse cx="62" cy="72" rx="9" ry="11" fill="#ffffff" stroke="#262238" stroke-width="2" />
+            <circle cx="62.8" cy="74" r="5" fill="#262238" />
+            <circle cx="60.4" cy="69.6" r="1.8" fill="#ffffff" />
+            <ellipse cx="98" cy="72" rx="9" ry="11" fill="#ffffff" stroke="#262238" stroke-width="2" />
+            <circle cx="98.8" cy="74" r="5" fill="#262238" />
+            <circle cx="96.4" cy="69.6" r="1.8" fill="#ffffff" />
+            <path d="M62 96 Q80 116 98 96" stroke="#262238" stroke-width="4" fill="none" stroke-linecap="round" />
+            <!-- lesung pipit nod: bold cheek dots + cream highlight arcs -->
+            <circle cx="55" cy="92" r="4.5" fill="#b96a3c" />
+            <circle cx="105" cy="92" r="4.5" fill="#b96a3c" />
+            <path d="M50 88 A7 7 0 0 1 58 87" stroke="#fff3e2" stroke-width="2" fill="none" stroke-linecap="round" />
+            <path d="M102 87 A7 7 0 0 1 110 88" stroke="#fff3e2" stroke-width="2" fill="none" stroke-linecap="round" />
+          </g>
+          <ellipse cx="80" cy="148" rx="40" ry="6" fill="#262238" opacity="0.14" />
+        </svg>
+      </div>
+
+      <!-- Beat 3: fade transition to outro panel -->
+      <div id="outro-wrap" class="clip" data-start="8.5" data-duration="3.5" data-track-index="3">
+        <div id="outro-panel">
+          <div class="line">Alhamdulillah — render deterministis!</div>
+          <div class="hikmah">Hikmah: HTML → MP4</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // One paused timeline, registered AFTER its tweens. fromTo everywhere:
+      // the host re-seeks the composition, `from` drifts on seek-back.
+      const tl = gsap.timeline({ paused: true });
+
+      // Beat 1: title scale-in (animate the child, never the .clip itself).
+      tl.fromTo(
+        "#title-card",
+        { scale: 0.3, opacity: 0, transformOrigin: "50% 50%" },
+        { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.7)" },
+        0.3
+      );
+      // Mid hold punch so the frame visibly changes.
+      tl.fromTo(
+        "#title-card",
+        { scale: 1 },
+        { scale: 1.07, duration: 0.18, ease: "power2.out", yoyo: true, repeat: 1 },
+        5.4
+      );
+      // Fade out before the title clip ends (end state lands just before end).
+      tl.to("#title-card", { opacity: 0, duration: 0.35, ease: "power1.in" }, 8.1);
+
+      // Beat 2: buddy bounce-in from above, squash on landing, finite idle hops.
+      tl.fromTo(
+        "#buddy-body",
+        { y: -420, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.05, ease: "bounce.out" },
+        1.8
+      );
+      tl.fromTo(
+        "#buddy-body",
+        { scaleY: 1, scaleX: 1, transformOrigin: "50% 100%" },
+        { scaleY: 0.82, scaleX: 1.12, duration: 0.16, yoyo: true, repeat: 3, ease: "power1.inOut" },
+        2.85
+      );
+      // Three idle hops (finite repeat — repeat:-1 is banned).
+      tl.fromTo(
+        "#buddy-body",
+        { y: 0 },
+        { y: -34, duration: 0.34, yoyo: true, repeat: 5, ease: "power1.out" },
+        3.8
+      );
+      tl.to("#buddy-body", { opacity: 0, duration: 0.3, ease: "power1.in" }, 8.15);
+
+      // Beat 3: fade transition into the outro panel.
+      tl.fromTo(
+        "#outro-panel",
+        { opacity: 0, scale: 0.9, transformOrigin: "50% 50%" },
+        { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" },
+        8.7
+      );
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["poc"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
