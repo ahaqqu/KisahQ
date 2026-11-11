@@ -5,6 +5,12 @@ node_modules/
 dist/
 .astro/
 
+# HyperFrames render output + machine-local state (history, snapshots)
+videos/
+.hyperframes/
+# Local installs use bun (worktree inode sharing); the committed lockfile is npm's package-lock.json (CI runs npm ci)
+bun.lock
+
 # Wrangler local state
 .wrangler/
 
